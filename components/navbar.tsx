@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Button } from './ui/button'
 import { ModeToggle } from './mode-toggle'
-import { CircleDollarSign, Home, PlusCircle, User } from 'lucide-react'
+import { CircleDollarSign, Home, PlusCircle, User, MessageSquare, Tag } from 'lucide-react'
 
 export default function Navbar() {
   return (
@@ -11,20 +11,22 @@ export default function Navbar() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <CircleDollarSign className="h-6 w-6" />
-            <span className="font-bold text-xl">DevForum</span>
+            <CircleDollarSign className="h-6 w-6 text-primary" />
+            <span className="font-bold text-xl">InquireA</span>
           </Link>
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
-              <Home className="h-4 w-4" />
-              <span>Home</span>
+            <Link href="/questions" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
+              <MessageSquare className="h-4 w-4" />
+              <span>Questions</span>
             </Link>
-            <Link href="/questions" className="text-muted-foreground hover:text-foreground">Questions</Link>
-            <Link href="/tags" className="text-muted-foreground hover:text-foreground">Tags</Link>
+            <Link href="/tags" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
+              <Tag className="h-4 w-4" />
+              <span>Tags</span>
+            </Link>
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="default" size="sm" asChild>
             <Link href="/questions/ask">
               <PlusCircle className="h-4 w-4 mr-2" />
               Ask Question

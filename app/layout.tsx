@@ -1,22 +1,21 @@
-import './globals.css'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { ThemeProvider } from '@/components/theme-provider'
-import { MainNav } from '@/components/layout/MainNav'
-import { Sidebar } from '@/components/layout/Sidebar'
-import { Toaster } from '@/components/ui/toaster'
+import './globals.css';
+import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
+import { ThemeProvider } from '@/components/theme-provider';
+import Navbar from '@/components/navbar';
+import { Toaster } from '@/components/ui/toaster';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'DevForum - Ask & Earn',
-  description: 'A developer forum with token-based Q&A system',
-}
+  title: 'InquireA - Ask, Answer & Earn',
+  description: 'A blockchain-powered Q&A platform where knowledge meets rewards',
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -27,20 +26,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen flex flex-col bg-background">
-            <MainNav />
-            <div className="flex-1 flex">
-              <Sidebar />
-              <main className="flex-1 pt-6">
-                <div className="container mx-auto px-4">
-                  {children}
-                </div>
-              </main>
-            </div>
+          <div className="min-h-screen bg-background">
+            <Navbar />
+            <main className="container mx-auto px-4 py-6">
+              {children}
+            </main>
           </div>
           <Toaster />
         </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
