@@ -1,4 +1,5 @@
 import './globals.css';
+import '@rainbow-me/rainbowkit/styles.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -12,7 +13,8 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'InquireA - Ask, Answer & Earn',
-  description: 'A blockchain-powered Q&A platform where knowledge meets rewards',
+  description:
+    'A blockchain-powered Q&A platform where knowledge meets rewards',
 };
 
 export default function RootLayout({
@@ -34,9 +36,7 @@ export default function RootLayout({
             <div className="flex-1 flex">
               <Sidebar />
               <main className="flex-1 pt-6">
-                <div className="container mx-auto px-4">
-                  {children}
-                </div>
+                <div className="container mx-auto px-4">{children}</div>
               </main>
             </div>
           </div>
