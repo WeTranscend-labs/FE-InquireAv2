@@ -1,4 +1,5 @@
 'use client';
+import { toastDuration } from '@/constants/toast';
 import { useToast } from '@/hooks/use-toast';
 import { Check, Copy } from 'lucide-react';
 import React, { useState } from 'react';
@@ -25,14 +26,14 @@ const CopyClipboard: React.FC<CopyClipboardProps> = ({
       toast({
         title: 'Copied Successfully',
         // description: 'Wallet address has been successfully copied',
-        duration: 1500,
+        duration: toastDuration,
       });
-      setTimeout(() => setIsCopied(false), 1500);
+      setTimeout(() => setIsCopied(false), toastDuration);
     } catch (err) {
       toast({
         title: 'Copy Failed',
         description: 'Unable to copy wallet address',
-        duration: 2000,
+        duration: toastDuration,
         variant: 'destructive',
       });
     }
