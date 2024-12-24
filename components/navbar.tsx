@@ -1,9 +1,16 @@
-"use client"
+'use client';
 
-import Link from 'next/link'
-import { Button } from './ui/button'
-import { ModeToggle } from './mode-toggle'
-import { CircleDollarSign, Home, PlusCircle, User, MessageSquare, Tag } from 'lucide-react'
+import Link from 'next/link';
+import { Button } from './ui/button';
+import { ModeToggle } from './mode-toggle';
+import {
+  CircleDollarSign,
+  Home,
+  PlusCircle,
+  User,
+  MessageSquare,
+  Tag,
+} from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -15,11 +22,17 @@ export default function Navbar() {
             <span className="font-bold text-xl">InquireA</span>
           </Link>
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/questions" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
+            <Link
+              href="/questions"
+              className="flex items-center space-x-2 text-muted-foreground hover:text-foreground"
+            >
               <MessageSquare className="h-4 w-4" />
               <span>Questions</span>
             </Link>
-            <Link href="/tags" className="flex items-center space-x-2 text-muted-foreground hover:text-foreground">
+            <Link
+              href="/tags"
+              className="flex items-center space-x-2 text-muted-foreground hover:text-foreground"
+            >
               <Tag className="h-4 w-4" />
               <span>Tags</span>
             </Link>
@@ -41,5 +54,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }
