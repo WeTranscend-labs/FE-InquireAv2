@@ -5,7 +5,13 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useTheme } from 'next-themes';
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { ChevronDown } from 'lucide-react';
+import {
+  ChevronDown,
+  NetworkIcon,
+  PlugIcon,
+  Wallet2Icon,
+  WalletIcon,
+} from 'lucide-react';
 
 export function CustomConnectButton() {
   const { theme } = useTheme();
@@ -16,6 +22,9 @@ export function CustomConnectButton() {
   }, [theme]);
 
   // Hàm để chọn variant dựa trên theme
+  function formatAddress(address: string) {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  }
 
   return (
     <ConnectButton.Custom>
@@ -49,9 +58,16 @@ export function CustomConnectButton() {
             {(() => {
               if (!connected) {
                 return (
-                  <Button onClick={openConnectModal} variant="default">
-                    Connect Wallet
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      onClick={openConnectModal}
+                      variant="default"
+                      className="flex items-center justify-center"
+                    >
+                      <PlugIcon className="mr-2 h-4 w-4" />
+                      <span className="truncate">Connect Wallet</span>
+                    </Button>
+                  </div>
                 );
               }
 
@@ -64,18 +80,29 @@ export function CustomConnectButton() {
               }
 
               return (
-                <div className="flex items-center gap-2">
-                  <Button onClick={openChainModal} variant="outline">
-                    {chain.name}
+                <div className="flex items-center">
+                  <Button
+                    onClick={openChainModal}
+                    variant="outline"
+                    className="rounded-r-none border-r-0 flex items-center gap-2"
+                  >
+                    <NetworkIcon className="h-4 w-4 text-muted-foreground" />
+                    <span className="font-medium">{chain.name}</span>
                   </Button>
                   <Button
                     onClick={openAccountModal}
                     variant="default"
-                    className="flex items-center gap-2 max-w-[200px]"
+                    className="rounded-l-none flex items-center gap-2 max-w-[250px]"
                   >
-                    <span className="truncate max-w-[150px]">
-                      {account.displayName}
-                    </span>
+                    <Wallet2Icon className="h-4 w-4 mr-2 text-muted-foreground" />
+                    <div className="flex flex-col items-start">
+                      <span className="text-sm font-medium truncate max-w-[150px]">
+                        {account.displayBalance}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {formatAddress(account.address)}
+                      </span>
+                    </div>
                     <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
                   </Button>
                 </div>
