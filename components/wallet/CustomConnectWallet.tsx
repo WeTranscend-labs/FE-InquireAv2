@@ -12,6 +12,7 @@ import {
   Wallet2Icon,
   WalletIcon,
 } from 'lucide-react';
+import CopyClipboard from '../common/CopyClipboard';
 
 export function CustomConnectButton() {
   const { theme } = useTheme();
@@ -23,7 +24,7 @@ export function CustomConnectButton() {
 
   // Hàm để chọn variant dựa trên theme
   function formatAddress(address: string) {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+    return `${address.slice(0, 3)}...${address.slice(-3)}`;
   }
 
   return (
@@ -99,8 +100,12 @@ export function CustomConnectButton() {
                       <span className="text-sm font-medium truncate max-w-[150px]">
                         {account.displayBalance}
                       </span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-xs text-muted-foreground flex">
                         {formatAddress(account.address)}
+                        <CopyClipboard
+                          text={account.address}
+                          className="w-3 h-3 my-auto ml-1"
+                        />
                       </span>
                     </div>
                     <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
