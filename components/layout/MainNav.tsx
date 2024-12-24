@@ -1,13 +1,15 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { CircleDollarSign, MessageSquare, Info } from "lucide-react"
-import { ModeToggle } from "@/components/mode-toggle"
-import { usePathname } from "next/navigation"
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { CircleDollarSign, MessageSquare, Info } from 'lucide-react';
+import { ModeToggle } from '@/components/mode-toggle';
+import { usePathname } from 'next/navigation';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { CustomConnectButton } from '../wallet/CustomConnectWallet';
 
 export function MainNav() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -20,7 +22,7 @@ export function MainNav() {
 
           <nav className="hidden md:flex items-center gap-4">
             <Button
-              variant={pathname === "/questions" ? "secondary" : "ghost"}
+              variant={pathname === '/questions' ? 'secondary' : 'ghost'}
               size="sm"
               asChild
             >
@@ -31,7 +33,7 @@ export function MainNav() {
             </Button>
 
             <Button
-              variant={pathname === "/about" ? "secondary" : "ghost"}
+              variant={pathname === '/about' ? 'secondary' : 'ghost'}
               size="sm"
               asChild
             >
@@ -44,12 +46,14 @@ export function MainNav() {
         </div>
 
         <div className="flex items-center gap-4">
+          <ModeToggle />
           <Button asChild>
             <Link href="/questions/ask">Ask Question</Link>
           </Button>
-          <ModeToggle />
+
+          <CustomConnectButton />
         </div>
       </div>
     </header>
-  )
+  );
 }
