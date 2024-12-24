@@ -4,6 +4,9 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import Navbar from '@/components/navbar';
 import { Toaster } from '@/components/ui/toaster';
+import { Footer } from '@/components/layout/footer/Footer';
+import { MainNav } from '@/components/layout/MainNav';
+import { Sidebar } from '@/components/layout/Sidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,11 +29,16 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen bg-background">
-            <Navbar />
-            <main className="container mx-auto px-4 py-6">
-              {children}
-            </main>
+          <div className="min-h-screen flex flex-col bg-background">
+            <MainNav />
+            <div className="flex-1 flex">
+              <Sidebar />
+              <main className="flex-1 pt-6">
+                <div className="container mx-auto px-4">
+                  {children}
+                </div>
+              </main>
+            </div>
           </div>
           <Toaster />
         </ThemeProvider>

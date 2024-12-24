@@ -14,14 +14,14 @@ export function MainNav() {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
-            <CircleDollarSign className="h-6 w-6" />
-            <span className="font-bold text-xl">DevForum</span>
+            <CircleDollarSign className="h-6 w-6 text-primary" />
+            <span className="font-bold text-xl">InquireA</span>
           </Link>
-          
+
           <nav className="hidden md:flex items-center gap-4">
-            <Button 
-              variant={pathname === "/questions" ? "secondary" : "ghost"} 
-              size="sm" 
+            <Button
+              variant={pathname === "/questions" ? "secondary" : "ghost"}
+              size="sm"
               asChild
             >
               <Link href="/questions">
@@ -29,10 +29,10 @@ export function MainNav() {
                 Questions
               </Link>
             </Button>
-            
-            <Button 
-              variant={pathname === "/about" ? "secondary" : "ghost"} 
-              size="sm" 
+
+            <Button
+              variant={pathname === "/about" ? "secondary" : "ghost"}
+              size="sm"
               asChild
             >
               <Link href="/about">

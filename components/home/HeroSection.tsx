@@ -24,15 +24,15 @@ export function HeroSection() {
             <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
               Where Knowledge Meets Rewards
             </h1>
-            
+
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Join our community of developers helping each other while earning tokens.
-              Get expert answers and build your reputation in the process.
+              Ask questions with token bounties, provide valuable answers, and earn rewards.
+              Join InquireA's blockchain-powered Q&A community today.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="min-w-[200px] animate-pulse"
                 asChild
               >
@@ -41,10 +41,10 @@ export function HeroSection() {
                   Ask a Question
                 </Link>
               </Button>
-              
-              <Button 
-                size="lg" 
-                variant="outline" 
+
+              <Button
+                size="lg"
+                variant="outline"
                 className="min-w-[200px] group"
                 asChild
               >
