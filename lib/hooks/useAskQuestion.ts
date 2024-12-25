@@ -5,6 +5,7 @@ import { contractABI as abi } from '../contracts/contractABI';
 
 export interface AskQuestionArgs {
   questionText: string;
+  questionContent: string;
   category: string;
   deadlinePeriod: number;
   rewardAmount: bigint;
@@ -15,17 +16,17 @@ export function useAskQuestion() {
 
   const askQuestion = async ({
     questionText,
+    questionContent,
     category,
     deadlinePeriod,
     rewardAmount,
   }: AskQuestionArgs) => {
     try {
       writeContract({
-        address:
-          (process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`) || '',
+        address: '0xYourContractAddress',
         abi: abi,
         functionName: 'askQuestion',
-        args: [questionText, category, deadlinePeriod],
+        args: [questionText, questionContent, category, deadlinePeriod],
         value: rewardAmount,
       });
     } catch (err) {
