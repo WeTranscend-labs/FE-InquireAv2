@@ -15,12 +15,14 @@ import {
 import CopyClipboard from '../common/CopyClipboard';
 
 export function CustomConnectButton() {
-  const { theme } = useTheme();
+  const { theme, systemTheme, resolvedTheme } = useTheme();
 
   useEffect(() => {
     // Đảm bảo RainbowKit tuân theo theme của ứng dụng
-    document.documentElement.classList.toggle('dark', theme === 'light');
-  }, [theme]);
+    document.documentElement.classList.toggle('light', theme === 'light');
+
+    console.log(theme);
+  }, [theme, systemTheme, resolvedTheme]);
 
   // Hàm để chọn variant dựa trên theme
   function formatAddress(address: string) {

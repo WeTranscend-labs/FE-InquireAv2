@@ -1,6 +1,6 @@
 'use client';
 import { toastDuration } from '@/constants/toast';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/lib/hooks/use-toast';
 import { Check, Copy } from 'lucide-react';
 import React, { useState } from 'react';
 
