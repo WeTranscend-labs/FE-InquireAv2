@@ -23,7 +23,7 @@ export function useAskQuestion() {
   }: AskQuestionArgs) => {
     try {
       writeContract({
-        address: '0xYourContractAddress',
+        address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
         abi: abi,
         functionName: 'askQuestion',
         args: [questionText, questionContent, category, deadlinePeriod],

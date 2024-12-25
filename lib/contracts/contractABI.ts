@@ -44,6 +44,11 @@ export const contractABI = [
       },
       {
         internalType: 'string',
+        name: '_questionContent',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
         name: '_category',
         type: 'string',
       },
@@ -318,6 +323,11 @@ export const contractABI = [
           },
           {
             internalType: 'string',
+            name: 'questionContent',
+            type: 'string',
+          },
+          {
+            internalType: 'string',
             name: 'category',
             type: 'string',
           },
@@ -431,6 +441,11 @@ export const contractABI = [
       {
         internalType: 'string',
         name: 'questionText',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: 'questionContent',
         type: 'string',
       },
       {
