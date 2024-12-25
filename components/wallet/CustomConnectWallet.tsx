@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import {
   ChevronDown,
   NetworkIcon,
+  OctagonAlert,
   PlugIcon,
   Wallet2Icon,
   WalletIcon,
@@ -15,12 +16,14 @@ import {
 import CopyClipboard from '../common/CopyClipboard';
 
 export function CustomConnectButton() {
-  const { theme } = useTheme();
+  const { theme, systemTheme, resolvedTheme } = useTheme();
 
   useEffect(() => {
     // Đảm bảo RainbowKit tuân theo theme của ứng dụng
-    document.documentElement.classList.toggle('dark', theme === 'light');
-  }, [theme]);
+    document.documentElement.classList.toggle('light', theme === 'light');
+
+    console.log(theme);
+  }, [theme, systemTheme, resolvedTheme]);
 
   // Hàm để chọn variant dựa trên theme
   function formatAddress(address: string) {
@@ -74,8 +77,13 @@ export function CustomConnectButton() {
 
               if (chain.unsupported) {
                 return (
-                  <Button onClick={openChainModal} variant="destructive">
-                    Wrong network
+                  <Button
+                    onClick={openChainModal}
+                    variant="destructive"
+                    className="flex items-center gap-2 px-4 py-2"
+                  >
+                    <OctagonAlert className="h-4 w-4" />
+                    <span className="truncate">Wrong Network</span>
                   </Button>
                 );
               }
