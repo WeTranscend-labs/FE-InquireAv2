@@ -1,36 +1,36 @@
-"use client"
+'use client';
 
-import { useFormContext } from "react-hook-form"
+import { useFormContext } from 'react-hook-form';
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { X, Plus } from "lucide-react"
-import { useState } from "react"
-import type { QuestionFormValues } from "@/lib/validations/question"
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { X, Plus } from 'lucide-react';
+import { useState } from 'react';
+import type { QuestionFormValues } from '@/lib/validations/question';
 
 export function QuestionFormFields() {
-  const { control, watch } = useFormContext<QuestionFormValues>()
-  const [newTag, setNewTag] = useState("")
-  const tags = watch("tags")
+  const { control, watch } = useFormContext<QuestionFormValues>();
+  const [newTag, setNewTag] = useState('');
+  const tags = watch('tags');
 
   const handleAddTag = (field: any) => {
     if (newTag && !tags.includes(newTag) && tags.length < 5) {
-      field.onChange([...tags, newTag.toLowerCase()])
-      setNewTag("")
+      field.onChange([...tags, newTag.toLowerCase()]);
+      setNewTag('');
     }
-  }
+  };
 
   const handleRemoveTag = (tagToRemove: string, field: any) => {
-    field.onChange(tags.filter((tag: string) => tag !== tagToRemove))
-  }
+    field.onChange(tags.filter((tag: string) => tag !== tagToRemove));
+  };
 
   return (
     <div className="space-y-4">
@@ -82,7 +82,7 @@ export function QuestionFormFields() {
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
                   placeholder="Add a tag"
-                  onKeyPress={(e) => e.key === "Enter" && handleAddTag(field)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleAddTag(field)}
                 />
                 <Button
                   type="button"
@@ -93,7 +93,7 @@ export function QuestionFormFields() {
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              
+
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {tags.map((tag: string) => (
@@ -124,7 +124,7 @@ export function QuestionFormFields() {
             <FormControl>
               <Input
                 type="number"
-                min={10}
+                min={1}
                 value={value}
                 onChange={(e) => onChange(parseInt(e.target.value))}
                 {...field}
@@ -135,5 +135,5 @@ export function QuestionFormFields() {
         )}
       />
     </div>
-  )
+  );
 }

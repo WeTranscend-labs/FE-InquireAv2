@@ -1,34 +1,36 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
-import { Alert } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
 import { MinimumFeeInfo } from '@/components/features/MinimumFeeInfo';
-import { QuestionGuidelines } from './QuestionGuidelines';
-import { QuestionPreview } from './QuestionPreview';
-import { QuestionFormFields } from './QuestionFormFields';
+import { Alert } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Form } from '@/components/ui/form';
+import { useToast } from '@/lib/hooks/use-toast';
+import { useAskQuestion } from '@/lib/hooks/useAskQuestion';
 import {
   questionSchema,
   type QuestionFormValues,
 } from '@/lib/validations/question';
-import { useState } from 'react';
-import { useAskQuestion } from '@/lib/hooks/useAskQuestion';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { ethers } from 'ethers';
+import { AlertCircle, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { QuestionFormFields } from './QuestionFormFields';
+import { QuestionGuidelines } from './QuestionGuidelines';
+import { QuestionPreview } from './QuestionPreview';
 
 export function QuestionForm() {
   const router = useRouter();
+  const { toast } = useToast();
   const [showPreview, setShowPreview] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Sử dụng hook useAskQuestion
   const {
     askQuestion,
     isPending,
+    isConfirming,
     isConfirmed,
     error: contractError,
   } = useAskQuestion();
@@ -38,41 +40,63 @@ export function QuestionForm() {
     defaultValues: {
       title: '',
       content: '',
-      bounty: 10,
+      bounty: 1,
       tags: [],
     },
   });
 
-  const {
-    handleSubmit,
-    formState: { isSubmitting },
-  } = form;
+  const { handleSubmit, reset } = form;
+
+  useEffect(() => {
+    if (isConfirmed) {
+      toast({
+        title: 'Question Submitted',
+        description: 'Your question has been successfully added.',
+        variant: 'default',
+        className: 'toast-success',
+      });
+
+      reset();
+    }
+  }, [isConfirmed, reset, router, toast]);
 
   const onSubmit = async (data: QuestionFormValues) => {
     try {
       setSubmitError(null);
 
-      // Chuyển đổi tags thành category (nối tags thành string)
       const category = data.tags.join(', ');
-
-      // Chuyển đổi bounty sang BigInt
       const rewardAmount = ethers.parseEther(data.bounty.toString());
 
-      // Gọi hàm đặt câu hỏi
+      // Show initial loading toast
+      const loadingToast = toast({
+        title: 'Submitting Question',
+        description: 'Waiting for transaction approval...',
+        duration: 10000,
+      });
+
       await askQuestion({
         questionText: data.title,
         questionContent: data.content,
         category,
-        deadlinePeriod: 0, // Mặc định là 1 tuần
+        deadlinePeriod: 0,
         rewardAmount,
       });
 
-      // Chuyển hướng sau khi đặt câu hỏi thành công
-      if (isConfirmed) {
-        router.push('/questions');
-      }
+      loadingToast.dismiss();
+      toast({
+        title: 'Processing Transaction',
+        description: 'Confirming on blockchain...',
+        duration: 10000,
+      });
     } catch (error) {
       console.error(error);
+
+      toast({
+        title: 'Submission Failed',
+        description: contractError?.message || 'Failed to submit question',
+        variant: 'destructive',
+      });
+
       setSubmitError('Failed to submit question. Please try again.');
     }
   };
@@ -92,13 +116,30 @@ export function QuestionForm() {
           <Button variant="outline" onClick={() => setShowPreview(false)}>
             Edit Question
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} disabled={isPending}>
-            {isPending ? 'Submitting...' : 'Submit Question'}
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            disabled={isPending || isConfirming}
+          >
+            {isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Waiting for signature...
+              </>
+            ) : isConfirming ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Confirming transaction...
+              </>
+            ) : (
+              'Submit Question'
+            )}
           </Button>
         </div>
       </div>
     );
   }
+
+  console.log(isConfirmed);
 
   return (
     <div className="grid md:grid-cols-[1fr,300px] gap-8">
@@ -125,8 +166,20 @@ export function QuestionForm() {
                 >
                   Preview
                 </Button>
-                <Button type="submit" disabled={isPending}>
-                  {isPending ? 'Submitting...' : 'Submit Question'}
+                <Button type="submit" disabled={isPending || isConfirming}>
+                  {isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Waiting for signature...
+                    </>
+                  ) : isConfirming ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Confirming transaction...
+                    </>
+                  ) : (
+                    'Submit Question'
+                  )}
                 </Button>
               </div>
             </form>
@@ -135,7 +188,7 @@ export function QuestionForm() {
       </div>
 
       <div className="space-y-6">
-        <MinimumFeeInfo minimumFee={10} userReputation={750} />
+        <MinimumFeeInfo minimumFee={1} userReputation={1} />
         <QuestionGuidelines />
       </div>
     </div>

@@ -23,7 +23,7 @@ export function useAnswer() {
       }
 
       writeContract({
-        address: '0xYourContractAddress', // Địa chỉ contract
+        address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
         functionName: 'submitAnswer',
         args: [questionId, answerText],
