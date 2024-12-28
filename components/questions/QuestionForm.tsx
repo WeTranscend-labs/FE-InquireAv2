@@ -20,12 +20,14 @@ import { useForm } from 'react-hook-form';
 import { QuestionFormFields } from './QuestionFormFields';
 import { QuestionGuidelines } from './QuestionGuidelines';
 import { QuestionPreview } from './QuestionPreview';
+import { useAccount, useConnect } from 'wagmi';
 
 export function QuestionForm() {
   const router = useRouter();
   const { toast } = useToast();
   const [showPreview, setShowPreview] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const { isConnected } = useAccount();
 
   const {
     askQuestion,
@@ -61,6 +63,15 @@ export function QuestionForm() {
   }, [isConfirmed, reset, router, toast]);
 
   const onSubmit = async (data: QuestionFormValues) => {
+    if (!isConnected) {
+      toast({
+        title: 'Wallet Not Connected',
+        description: 'Please connect your wallet to submit a question.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     try {
       setSubmitError(null);
 

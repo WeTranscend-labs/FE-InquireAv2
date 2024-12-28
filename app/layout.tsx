@@ -10,6 +10,7 @@ import '@rainbow-me/rainbowkit/styles.css';
 import dynamic from 'next/dynamic';
 import { Toaster } from '@/components/ui/toaster';
 import ContextProvider from '@/contexts/providers/ContextProvider';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -33,18 +34,20 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ContextProvider>
-            <div className="min-h-screen flex flex-col bg-background">
-              <MainNav />
-              <div className="flex-1 flex">
-                <Sidebar />
-                <main className="flex-1 pt-6">
-                  <div className="container mx-auto px-4">{children}</div>
-                </main>
+          <TooltipProvider>
+            <ContextProvider>
+              <div className="min-h-screen flex flex-col bg-background">
+                <MainNav />
+                <div className="flex-1 flex">
+                  <Sidebar />
+                  <main className="flex-1 pt-6">
+                    <div className="container mx-auto px-4">{children}</div>
+                  </main>
+                </div>
               </div>
-            </div>
-            <Toaster />
-          </ContextProvider>
+              <Toaster />
+            </ContextProvider>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -7,7 +7,10 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function QuestionsList() {
-  const { questions, isLoading, page, changePage } = useGetQuestions();
+  const { questions, isLoading, pagination, changePage } = useGetQuestions();
+  const { currentPage, totalPages } = pagination;
+
+  console.log(questions);
 
   if (isLoading) {
     return (
@@ -19,34 +22,49 @@ export default function QuestionsList() {
     );
   }
 
+  if (questions.length === 0) {
+    return (
+      <div className="flex items-center justify-center h-[300px]">
+        <p className="text-gray-500 text-lg">
+          There are currently no questions available.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-4">
-      {questions.map((question: any, index: number) => (
+      {questions.map((question, index) => (
         <QuestionCard
-          key={index}
+          key={question.id.toString()}
           question={{
-            id: index.toString(), // Sử dụng index làm id tạm thời
+            id: question.id.toString(),
             title: question.questionText,
             content: question.questionContent,
             bounty: Number(formatEther(question.rewardAmount)),
-            answers: 0, // Cần thêm logic đếm answers
-            votes: 0, // Cần thêm logic đếm votes
-            tags: question.category.split(','), // Chuyển category thành tags
+            answers: 0,
+            votes: 0,
+            tags: question.category?.split(',') || [],
             author: question.asker,
             createdAt: new Date(Number(question.createdAt) * 1000),
           }}
         />
       ))}
 
+      {/* Phân trang */}
       <div className="flex justify-between mt-4">
         <Button
           variant="outline"
-          onClick={() => changePage(page - 1)}
-          disabled={page === 1}
+          onClick={() => changePage(currentPage - 1)}
+          disabled={currentPage === 1}
         >
           Previous
         </Button>
-        <Button variant="outline" onClick={() => changePage(page + 1)}>
+        <Button
+          variant="outline"
+          onClick={() => changePage(currentPage + 1)}
+          disabled={currentPage === totalPages}
+        >
           Next
         </Button>
       </div>

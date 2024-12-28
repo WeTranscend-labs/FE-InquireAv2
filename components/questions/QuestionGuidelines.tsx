@@ -7,7 +7,7 @@ export function QuestionGuidelines() {
   return (
     <div className="grid gap-4">
       <Alert
-        variant="warning"
+        variant="destructive"
         className="bg-yellow-500/10 border-yellow-500/20"
       >
         <Shield className="h-4 w-4 text-yellow-500" />

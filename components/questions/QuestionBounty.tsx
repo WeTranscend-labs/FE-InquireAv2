@@ -1,9 +1,10 @@
-"use client"
+'use client';
 
-import { CircleDollarSign } from 'lucide-react'
+import { CircleDollarSign } from 'lucide-react';
+import { formatEther } from 'viem';
 
 interface QuestionBountyProps {
-  amount: number
+  amount: bigint;
 }
 
 export function QuestionBounty({ amount }: QuestionBountyProps) {
@@ -12,8 +13,8 @@ export function QuestionBounty({ amount }: QuestionBountyProps) {
       <div className="bg-primary/10 rounded-full p-4 mb-2">
         <CircleDollarSign className="h-8 w-8 text-primary" />
       </div>
-      <div className="font-semibold text-xl">{amount}</div>
+      <div className="font-semibold text-xl">{Number(formatEther(amount))}</div>
       <div className="text-sm text-muted-foreground">tokens</div>
     </div>
-  )
+  );
 }

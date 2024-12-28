@@ -1,31 +1,24 @@
-"use client"
+'use client';
 
-import { QuestionContent } from './QuestionContent'
-import { QuestionMetadata } from './QuestionMetadata'
-import { QuestionTags } from './QuestionTags'
-import { QuestionBounty } from './QuestionBounty'
-import { QuestionGuidelines } from './QuestionGuidelines'
-import { Card } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
+import { Card } from '@/components/ui/card';
+import { QuestionBounty } from './QuestionBounty';
+import { QuestionContent } from './QuestionContent';
+import { QuestionGuidelines } from './QuestionGuidelines';
+import { QuestionMetadata } from './QuestionMetadata';
+import { QuestionTags } from './QuestionTags';
 
-interface Question {
-  id: string
-  asker: string
-  questionText: string
-  rewardAmount: number
-  createdAt: number
-  isClosed: boolean
-  chosenAnswerId: number
-  deadline: string
-  tags?: string[]
-}
+import { Separator } from '@/components/ui/separator';
+import { ContractQuestion } from '@/lib/hooks/useGetQuestions';
 
 interface QuestionDetailProps {
-  question: Question
-  answersCount: number
+  question: ContractQuestion;
+  answersCount: number;
 }
 
-export default function QuestionDetail({ question, answersCount }: QuestionDetailProps) {
+export default function QuestionDetail({
+  question,
+  answersCount,
+}: QuestionDetailProps) {
   return (
     <div className="max-w-4xl mx-auto">
       <Card className="p-8 shadow-lg border-t-4 border-t-primary">
@@ -34,15 +27,15 @@ export default function QuestionDetail({ question, answersCount }: QuestionDetai
           <div className="flex justify-between items-start gap-6">
             <div className="flex-1">
               <h1 className="text-3xl font-bold mb-4">
-                Best practices for smart contract development
+                {question.questionText}
               </h1>
               <QuestionMetadata
                 author={{
                   address: question.asker,
                   reputation: 750,
-                  avatar: 'https://i.pravatar.cc/150?u=asker'
+                  avatar: 'https://i.pravatar.cc/150?u=asker',
                 }}
-                createdAt={question.createdAt}
+                createdAt={new Date(Number(question.createdAt) * 1000)}
               />
             </div>
             <QuestionBounty amount={question.rewardAmount} />
@@ -54,22 +47,23 @@ export default function QuestionDetail({ question, answersCount }: QuestionDetai
           <QuestionContent content={question.questionText} />
 
           {/* Tags */}
-          <QuestionTags 
-            tags={question.tags || [
-              'solidity',
-              'ethereum',
-              'smart-contracts',
-              'security',
-              'gas-optimization'
-            ]} 
+          <QuestionTags
+            tags={
+              question.category?.split(',') || [
+                'solidity',
+                'ethereum',
+                'smart-contracts',
+                'security',
+                'gas-optimization',
+              ]
+            }
           />
 
           <Separator />
 
-          {/* Guidelines */}
           <QuestionGuidelines />
         </div>
       </Card>
     </div>
-  )
+  );
 }
