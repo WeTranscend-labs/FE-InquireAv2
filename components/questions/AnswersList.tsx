@@ -1,51 +1,60 @@
-"use client"
+'use client';
 
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { ThumbsUp, Check, User, Clock, MessageSquare, Code2, Share2, Flag } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
-import { ReputationBadge } from '@/components/features/ReputationBadge'
-import { useState } from 'react'
-import { AnswerContent } from './AnswerContent'
-import { CodeBlock } from './CodeBlock'
-import { AnswerActions } from './AnswerActions'
-import { AnswerMetadata } from './AnswerMetadata'
-
-interface Answer {
-  id: string
-  author: {
-    name: string
-    avatar: string
-    reputation: number
-  }
-  content: string
-  code?: string
-  upvotes: number
-  rewardAmount: number
-  createdAt: number
-  isAccepted?: boolean
-  comments?: {
-    id: string
-    author: string
-    content: string
-    createdAt: number
-  }[]
-}
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ThumbsUp, Check, MessageSquare } from 'lucide-react';
+import { formatDistanceToNow } from 'date-fns';
+import { useState } from 'react';
+import { ContractAnswer } from '@/lib/hooks/useGetAnswersByQuestionId';
 
 interface AnswersListProps {
-  answers: Answer[]
-  onUpvote?: (answerId: string) => void
-  onAccept?: (answerId: string) => void
+  answers: ContractAnswer[];
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  isLoading?: boolean;
+  error?: Error | null;
+  onUpvote?: (answerId: bigint) => void;
+  onAccept?: (answerId: bigint) => void;
 }
 
-export default function AnswersList({ answers, onUpvote, onAccept }: AnswersListProps) {
-  const [votedAnswers, setVotedAnswers] = useState<Set<string>>(new Set())
+export default function AnswersList({
+  answers,
+  totalPages,
+  currentPage,
+  onPageChange,
+  isLoading,
+  error,
+  onUpvote,
+  onAccept,
+}: AnswersListProps) {
+  const [votedAnswers, setVotedAnswers] = useState<Set<bigint>>(new Set());
 
-  const handleUpvote = (answerId: string) => {
+  const handleUpvote = (answerId: bigint) => {
     if (!votedAnswers.has(answerId)) {
-      setVotedAnswers(new Set([...votedAnswers, answerId]))
-      onUpvote?.(answerId)
+      setVotedAnswers(new Set([...votedAnswers, answerId]));
+      onUpvote?.(answerId);
     }
+  };
+
+  if (isLoading) {
+    return (
+      <Card className="p-8 text-center">
+        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+        <p className="text-muted-foreground">Loading answers...</p>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="p-8 text-center">
+        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+        <p className="text-muted-foreground">
+          Error loading answers: {error.message}
+        </p>
+      </Card>
+    );
   }
 
   if (answers.length === 0) {
@@ -57,14 +66,16 @@ export default function AnswersList({ answers, onUpvote, onAccept }: AnswersList
           Be the first to help by providing an answer to this question.
         </p>
       </Card>
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <span>{answers.length} {answers.length === 1 ? 'Answer' : 'Answers'}</span>
+          <span>
+            {answers.length} {answers.length === 1 ? 'Answer' : 'Answers'}
+          </span>
           <div className="h-px flex-1 bg-border ml-4" />
         </h2>
       </div>
@@ -72,7 +83,7 @@ export default function AnswersList({ answers, onUpvote, onAccept }: AnswersList
       <div className="space-y-6">
         {answers.map((answer) => (
           <AnswerCard
-            key={answer.id}
+            key={answer.id.toString()}
             answer={answer}
             hasVoted={votedAnswers.has(answer.id)}
             onUpvote={() => handleUpvote(answer.id)}
@@ -80,28 +91,39 @@ export default function AnswersList({ answers, onUpvote, onAccept }: AnswersList
           />
         ))}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center space-x-2 mt-4">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <Button
+              key={page}
+              variant={page === currentPage ? 'default' : 'outline'}
+              onClick={() => onPageChange(page)}
+            >
+              {page}
+            </Button>
+          ))}
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 interface AnswerCardProps {
-  answer: Answer
-  hasVoted: boolean
-  onUpvote: () => void
-  onAccept?: () => void
+  answer: ContractAnswer;
+  hasVoted: boolean;
+  onUpvote: () => void;
+  onAccept?: () => void;
 }
 
 function AnswerCard({ answer, hasVoted, onUpvote, onAccept }: AnswerCardProps) {
-  const [showComments, setShowComments] = useState(false)
-
   return (
-    <Card className={`p-6 transition-shadow hover:shadow-md ${
-      answer.isAccepted ? 'border-2 border-green-500 dark:border-green-400' : ''
-    }`}>
+    <Card className="p-6 transition-shadow hover:shadow-md">
       <div className="flex gap-6">
         <div className="flex flex-col items-center gap-3">
           <Button
-            variant={hasVoted ? "default" : "outline"}
+            variant={hasVoted ? 'default' : 'outline'}
             size="sm"
             onClick={onUpvote}
             className="rounded-full h-12 w-12 p-0 transition-transform hover:scale-105"
@@ -109,45 +131,27 @@ function AnswerCard({ answer, hasVoted, onUpvote, onAccept }: AnswerCardProps) {
           >
             <ThumbsUp className="h-5 w-5" />
           </Button>
-          <span className="font-medium text-lg">{answer.upvotes}</span>
-          {answer.isAccepted && (
-            <div className="bg-green-100 dark:bg-green-900 p-2 rounded-full">
-              <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
-            </div>
-          )}
+          <span className="font-medium text-lg">
+            {answer.upvotes.toString()}
+          </span>
         </div>
 
         <div className="flex-1 space-y-4">
-          <AnswerMetadata author={answer.author} createdAt={answer.createdAt} />
-          
-          <AnswerContent content={answer.content} />
-          
-          {answer.code && (
-            <CodeBlock code={answer.code} language="typescript" />
-          )}
-
-          <AnswerActions
-            hasComments={Boolean(answer.comments?.length)}
-            onToggleComments={() => setShowComments(!showComments)}
-            rewardAmount={answer.rewardAmount}
-          />
-
-          {showComments && answer.comments && (
-            <div className="mt-4 space-y-3 pl-4 border-l-2">
-              {answer.comments.map((comment) => (
-                <div key={comment.id} className="text-sm">
-                  <span className="font-medium">{comment.author}</span>
-                  <span className="text-muted-foreground mx-2">•</span>
-                  <span className="text-muted-foreground">
-                    {formatDistanceToNow(new Date(comment.createdAt))} ago
-                  </span>
-                  <p className="mt-1">{comment.content}</p>
-                </div>
-              ))}
+          <div className="flex items-center justify-between">
+            <div className="text-sm text-muted-foreground">
+              By {answer.responder}
+              <span className="mx-2">•</span>
+              {formatDistanceToNow(answer.createdAt)} ago
             </div>
-          )}
+          </div>
+
+          <div dangerouslySetInnerHTML={{ __html: answer.answerText }} />
+
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <span>Reward: {answer.rewardAmount.toString()} tokens</span>
+          </div>
         </div>
       </div>
     </Card>
-  )
+  );
 }

@@ -32,7 +32,6 @@ export function useAnswer() {
         throw new Error('Answer text is too long');
       }
 
-      // Thực hiện submit answer
       writeContract({
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
@@ -66,12 +65,12 @@ export function useAnswer() {
 
   return {
     submitAnswer,
-    isPending, // Đang chờ ký transaction
-    isConfirming, // Đang xác nhận trên blockchain
-    isConfirmed, // Transaction đã thành công
-    isError, // Có lỗi xảy ra
-    hash, // Hash của transaction
-    error, // Thông tin lỗi
-    resetState, // Phương thức reset state
+    isPending,
+    isConfirming,
+    isConfirmed,
+    isError,
+    hash,
+    error,
+    resetState,
   };
 }

@@ -1,14 +1,20 @@
-import React from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 
 type Props = {
   initialValue: string;
+  onChange?: (content: string) => void;
 };
 
-const ContentEditor = ({ initialValue }: Props) => {
+const ContentEditor = ({ initialValue, onChange }: Props) => {
+  const handleEditorChange = (content: string) => {
+    if (onChange) {
+      onChange(content);
+    }
+  };
+
   return (
     <Editor
-      apiKey="lm4fd2evgn8ukf4opw91ayotejhriy3hth77jcat8awbzzlv"
+      apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
       init={{
         plugins: [
           // Core editing features
@@ -68,7 +74,8 @@ const ContentEditor = ({ initialValue }: Props) => {
             Promise.reject('See docs to implement AI Assistant')
           ),
       }}
-      initialValue={initialValue}
+      value={initialValue}
+      onEditorChange={handleEditorChange}
     />
   );
 };

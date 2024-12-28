@@ -3,14 +3,11 @@
 import { PieChart, DollarSign } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { ContractAnswer } from '@/lib/hooks/useGetAnswersByQuestionId';
 
 interface RewardDistributionProps {
   bountyAmount: number;
-  answers: {
-    id: string;
-    votes: number;
-    author: string;
-  }[];
+  answers: ContractAnswer[];
 }
 
 export function ProportionalRewardInfo({
@@ -18,7 +15,7 @@ export function ProportionalRewardInfo({
   answers,
 }: RewardDistributionProps) {
   const totalVotes = answers.reduce(
-    (sum, answer) => sum + Math.max(0, answer.votes),
+    (sum: any, answer: any) => sum + Math.max(0, answer.votes),
     0
   );
 
@@ -32,14 +29,14 @@ export function ProportionalRewardInfo({
       <div className="space-y-3">
         {answers.map((answer) => {
           const percentage = totalVotes
-            ? (Math.max(0, answer.votes) / totalVotes) * 100
+            ? (Math.max(0, Number(answer?.upvotes)) / totalVotes) * 100
             : 0;
           const reward = Math.round((Number(bountyAmount) * percentage) / 100);
 
           return (
             <div key={answer.id} className="space-y-1">
               <div className="flex justify-between text-sm">
-                <span>{answer.author}</span>
+                <span>{answer.responder}</span>
                 <span className="flex items-center">
                   <DollarSign className="h-4 w-4" />
                   {reward}

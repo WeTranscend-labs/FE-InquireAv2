@@ -247,6 +247,11 @@ export const contractABI = [
     name: 'answers',
     outputs: [
       {
+        internalType: 'uint256',
+        name: 'id',
+        type: 'uint256',
+      },
+      {
         internalType: 'address',
         name: 'responder',
         type: 'address',
@@ -325,6 +330,11 @@ export const contractABI = [
       {
         components: [
           {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
+          {
             internalType: 'address',
             name: 'responder',
             type: 'address',
@@ -353,6 +363,77 @@ export const contractABI = [
         internalType: 'struct InquireA.Answer',
         name: '',
         type: 'tuple',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'questionId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'pageIndex',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'pageSize',
+        type: 'uint256',
+      },
+    ],
+    name: 'getAnswersByQuestionId',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'id',
+            type: 'uint256',
+          },
+          {
+            internalType: 'address',
+            name: 'responder',
+            type: 'address',
+          },
+          {
+            internalType: 'string',
+            name: 'answerText',
+            type: 'string',
+          },
+          {
+            internalType: 'uint256',
+            name: 'upvotes',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'rewardAmount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'createdAt',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct InquireA.Answer[]',
+        name: 'answersList',
+        type: 'tuple[]',
+      },
+      {
+        internalType: 'uint256',
+        name: 'totalAnswers',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'totalPages',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
