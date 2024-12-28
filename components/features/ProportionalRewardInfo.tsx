@@ -14,8 +14,9 @@ export function ProportionalRewardInfo({
   bountyAmount,
   answers,
 }: RewardDistributionProps) {
+  // Chuyển đổi upvotes sang number và tính tổng số vote
   const totalVotes = answers.reduce(
-    (sum: any, answer: any) => sum + Math.max(0, answer.votes),
+    (sum, answer) => sum + Number(answer.upvotes),
     0
   );
 
@@ -28,13 +29,15 @@ export function ProportionalRewardInfo({
 
       <div className="space-y-3">
         {answers.map((answer) => {
-          const percentage = totalVotes
-            ? (Math.max(0, Number(answer?.upvotes)) / totalVotes) * 100
-            : 0;
-          const reward = Math.round((Number(bountyAmount) * percentage) / 100);
+          // Chuyển đổi upvotes sang number
+          const votes = Number(answer.upvotes);
+
+          const percentage = totalVotes ? (votes / totalVotes) * 100 : 0;
+
+          const reward = Math.round((bountyAmount * percentage) / 100);
 
           return (
-            <div key={answer.id} className="space-y-1">
+            <div key={answer.id.toString()} className="space-y-1">
               <div className="flex justify-between text-sm">
                 <span>{answer.responder}</span>
                 <span className="flex items-center">

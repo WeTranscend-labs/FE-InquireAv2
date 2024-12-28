@@ -41,7 +41,6 @@ export function useGetQuestions(initialPageSize = 10) {
     },
   });
 
-  // Xử lý dữ liệu an toàn
   const processContractData = () => {
     if (!contractData || !Array.isArray(contractData)) {
       return {

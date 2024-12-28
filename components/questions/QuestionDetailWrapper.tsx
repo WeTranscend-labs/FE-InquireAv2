@@ -137,12 +137,16 @@ export default function QuestionDetailWrapper({
 
       {/* Hiển thị danh sách answers */}
       <AnswersList
-        answers={answers ?? []}
+        answers={answers}
         totalPages={totalPages}
         currentPage={currentPage}
         onPageChange={changePage}
         isLoading={isLoading}
         error={error}
+        bestAnswer={question.chosenAnswerId}
+        questionAsker={question.asker}
+        questionId={BigInt(question.id)}
+        questionIsClosed={question.isClosed}
       />
     </div>
   );

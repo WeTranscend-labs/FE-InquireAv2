@@ -44,7 +44,7 @@ export default function QuestionDetail({
           <Separator />
 
           {/* Question Content */}
-          <QuestionContent content={question.questionText} />
+          <QuestionContent content={question.questionContent} />
 
           {/* Tags */}
           <QuestionTags
