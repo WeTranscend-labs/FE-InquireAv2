@@ -8,16 +8,9 @@ import './globals.css';
 import '@rainbow-me/rainbowkit/styles.css';
 
 import dynamic from 'next/dynamic';
-import { Suspense } from 'react';
 import { Toaster } from '@/components/ui/toaster';
-
-const ContextProvider = dynamic(
-  () => import('@/contexts/providers/ContextProvider'),
-  {
-    ssr: true,
-    loading: () => <div>Loading Context...</div>,
-  }
-);
+import ContextProvider from '@/contexts/providers/ContextProvider';
+import { TooltipProvider } from '@radix-ui/react-tooltip';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -41,7 +34,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Suspense fallback={null}>
+          <TooltipProvider>
             <ContextProvider>
               <div className="min-h-screen flex flex-col bg-background">
                 <MainNav />
@@ -54,7 +47,7 @@ export default function RootLayout({
               </div>
               <Toaster />
             </ContextProvider>
-          </Suspense>
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

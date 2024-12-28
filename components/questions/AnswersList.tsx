@@ -1,51 +1,104 @@
-"use client"
+'use client';
 
-import { Card } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { ThumbsUp, Check, User, Clock, MessageSquare, Code2, Share2, Flag } from 'lucide-react'
-import { formatDistanceToNow } from 'date-fns'
-import { ReputationBadge } from '@/components/features/ReputationBadge'
-import { useState } from 'react'
-import { AnswerContent } from './AnswerContent'
-import { CodeBlock } from './CodeBlock'
-import { AnswerActions } from './AnswerActions'
-import { AnswerMetadata } from './AnswerMetadata'
-
-interface Answer {
-  id: string
-  author: {
-    name: string
-    avatar: string
-    reputation: number
-  }
-  content: string
-  code?: string
-  upvotes: number
-  rewardAmount: number
-  createdAt: number
-  isAccepted?: boolean
-  comments?: {
-    id: string
-    author: string
-    content: string
-    createdAt: number
-  }[]
-}
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { useToast } from '@/lib/hooks/use-toast';
+import { ContractAnswer } from '@/lib/hooks/useGetAnswersByQuestionId';
+import { useSelectBestAnswer } from '@/lib/hooks/useSelectBestAnswer';
+import { cn } from '@/lib/utils';
+import { formatDistanceToNow } from 'date-fns';
+import { BigIntStatsFs } from 'fs';
+import { Award, Crown, CrownIcon, MessageSquare, ThumbsUp } from 'lucide-react';
+import { useState } from 'react';
+import { formatEther } from 'viem';
+import { useAccount } from 'wagmi';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface AnswersListProps {
-  answers: Answer[]
-  onUpvote?: (answerId: string) => void
-  onAccept?: (answerId: string) => void
+  answers: ContractAnswer[];
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (page: number) => void;
+  isLoading?: boolean;
+  error?: Error | null;
+  questionAsker: string;
+  questionId: bigint;
+  questionIsClosed: boolean;
+  bestAnswer: bigint;
+  onUpvote?: (answerId: bigint) => void;
+  onAccept?: (answerId: bigint) => void;
 }
 
-export default function AnswersList({ answers, onUpvote, onAccept }: AnswersListProps) {
-  const [votedAnswers, setVotedAnswers] = useState<Set<string>>(new Set())
+export default function AnswersList({
+  answers,
+  totalPages,
+  currentPage,
+  onPageChange,
+  isLoading,
+  error,
+  onUpvote,
+  bestAnswer,
+  questionAsker,
+  questionId,
+  questionIsClosed,
+}: AnswersListProps) {
+  const [votedAnswers, setVotedAnswers] = useState<Set<bigint>>(new Set());
+  const { selectBestAnswer, isSelecting, isSuccess } = useSelectBestAnswer();
+  const { address } = useAccount();
+  const { toast } = useToast();
 
-  const handleUpvote = (answerId: string) => {
+  const handleUpvote = (answerId: bigint) => {
     if (!votedAnswers.has(answerId)) {
-      setVotedAnswers(new Set([...votedAnswers, answerId]))
-      onUpvote?.(answerId)
+      setVotedAnswers(new Set([...Array.from(votedAnswers), answerId]));
+      onUpvote?.(answerId);
     }
+  };
+
+  const handleSelectBestAnswer = async (answerId: bigint) => {
+    try {
+      await selectBestAnswer(questionId, answerId);
+
+      toast({
+        title: 'Best Answer Selected',
+        description: 'The best answer has been chosen successfully.',
+        variant: 'default',
+      });
+    } catch (error) {
+      toast({
+        title: 'Selection Failed',
+        description: 'Unable to select the best answer. Please try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  // Tách best answer ra khỏi danh sách
+  const bestAnswerObj = bestAnswer
+    ? answers.find((answer) => answer.id === bestAnswer)
+    : null;
+
+  const otherAnswers = bestAnswer
+    ? answers.filter((answer) => answer.id !== bestAnswer)
+    : answers;
+
+  if (isLoading) {
+    return (
+      <Card className="p-8 text-center">
+        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+        <p className="text-muted-foreground">Loading answers...</p>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card className="p-8 text-center">
+        <MessageSquare className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
+        <p className="text-muted-foreground">
+          Error loading answers: {error.message}
+        </p>
+      </Card>
+    );
   }
 
   if (answers.length === 0) {
@@ -57,97 +110,267 @@ export default function AnswersList({ answers, onUpvote, onAccept }: AnswersList
           Be the first to help by providing an answer to this question.
         </p>
       </Card>
-    )
+    );
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-semibold flex items-center gap-2">
-          <span>{answers.length} {answers.length === 1 ? 'Answer' : 'Answers'}</span>
+          <span>
+            {answers.length} {answers.length === 1 ? 'Answer' : 'Answers'}
+          </span>
           <div className="h-px flex-1 bg-border ml-4" />
         </h2>
       </div>
 
-      <div className="space-y-6">
-        {answers.map((answer) => (
+      {/* Best Answer Section */}
+      {bestAnswerObj && (
+        <div className="mb-6">
+          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Crown className="h-6 w-6 text-yellow-500" />
+            Best Answer
+          </h3>
           <AnswerCard
-            key={answer.id}
+            key={bestAnswerObj.id.toString()}
+            answer={bestAnswerObj}
+            hasVoted={votedAnswers.has(bestAnswerObj.id)}
+            onUpvote={() => handleUpvote(bestAnswerObj.id)}
+            canSelectBestAnswer={false} // Không cho chọn lại best answer
+            isBestAnswer={true} // Prop mới để styling
+          />
+        </div>
+      )}
+
+      {/* Other Answers Section */}
+      <div className="space-y-6">
+        {otherAnswers.map((answer) => (
+          <AnswerCard
+            key={answer.id.toString()}
             answer={answer}
             hasVoted={votedAnswers.has(answer.id)}
             onUpvote={() => handleUpvote(answer.id)}
-            onAccept={() => onAccept?.(answer.id)}
+            canSelectBestAnswer={
+              address?.toLowerCase() === questionAsker?.toLowerCase() &&
+              !questionIsClosed
+            }
+            onSelectBestAnswer={() => handleSelectBestAnswer(answer.id)}
+            isSelecting={isSelecting}
           />
         ))}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center space-x-2 mt-4">
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+            <Button
+              key={page}
+              variant={page === currentPage ? 'default' : 'outline'}
+              onClick={() => onPageChange(page)}
+            >
+              {page}
+            </Button>
+          ))}
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 interface AnswerCardProps {
-  answer: Answer
-  hasVoted: boolean
-  onUpvote: () => void
-  onAccept?: () => void
+  answer: ContractAnswer;
+  hasVoted: boolean;
+  onUpvote: () => void;
+  canSelectBestAnswer?: boolean;
+  onSelectBestAnswer?: () => void;
+  isSelecting?: boolean;
+  isBestAnswer?: boolean;
 }
 
-function AnswerCard({ answer, hasVoted, onUpvote, onAccept }: AnswerCardProps) {
-  const [showComments, setShowComments] = useState(false)
-
+export function AnswerCard({
+  answer,
+  hasVoted,
+  onUpvote,
+  canSelectBestAnswer = false,
+  onSelectBestAnswer,
+  isSelecting = false,
+  isBestAnswer = false,
+}: AnswerCardProps) {
   return (
-    <Card className={`p-6 transition-shadow hover:shadow-md ${
-      answer.isAccepted ? 'border-2 border-green-500 dark:border-green-400' : ''
-    }`}>
-      <div className="flex gap-6">
-        <div className="flex flex-col items-center gap-3">
-          <Button
-            variant={hasVoted ? "default" : "outline"}
-            size="sm"
-            onClick={onUpvote}
-            className="rounded-full h-12 w-12 p-0 transition-transform hover:scale-105"
-            disabled={hasVoted}
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.3 }}
+      layout
+    >
+      <Card
+        className={cn(
+          'p-6 transition-all duration-500 relative overflow-hidden group border',
+          isBestAnswer
+            ? 'border-2 border-emerald-500/70 bg-gradient-to-br from-emerald-50 via-emerald-50/50 to-emerald-100/30 shadow-2xl'
+            : 'hover:shadow-lg border-transparent hover:border-gray-200',
+          'transform-gpu hover:scale-[1.01] transition-transform duration-300'
+        )}
+      >
+        {/* Best Answer Badge with Animation */}
+        <AnimatePresence>
+          {isBestAnswer && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.5 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.5 }}
+              className="absolute top-0 right-0 z-10"
+            >
+              <motion.div
+                initial={{ rotate: -45, x: 50, y: -50 }}
+                animate={{ rotate: 0, x: 0, y: 0 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 15,
+                }}
+                className="absolute top-0 right-0 w-0 h-0 
+                  border-l-[60px] border-l-transparent 
+                  border-b-[60px] border-emerald-500/90
+                  shadow-xl"
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        <div className="flex gap-6">
+          {/* Upvote Section with Animation */}
+          <motion.div
+            className="flex flex-col items-center gap-3"
+            whileHover={{ scale: 1.05 }}
           >
-            <ThumbsUp className="h-5 w-5" />
-          </Button>
-          <span className="font-medium text-lg">{answer.upvotes}</span>
-          {answer.isAccepted && (
-            <div className="bg-green-100 dark:bg-green-900 p-2 rounded-full">
-              <Check className="h-5 w-5 text-green-600 dark:text-green-400" />
+            <Button
+              variant={hasVoted ? 'default' : 'outline'}
+              size="sm"
+              onClick={onUpvote}
+              className={cn(
+                'rounded-full h-12 w-12 p-0 transition-all duration-300',
+                isBestAnswer
+                  ? 'bg-yellow-500 hover:bg-yellow-600 text-white shadow-md'
+                  : 'hover:shadow-md',
+                hasVoted && 'bg-opacity-90'
+              )}
+              disabled={hasVoted}
+            >
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <ThumbsUp className="h-5 w-5" />
+              </motion.div>
+            </Button>
+            <motion.span
+              className={cn(
+                'font-medium text-lg',
+                isBestAnswer && 'text-yellow-700 font-bold'
+              )}
+              animate={{ scale: [1, 1.2, 1] }}
+              transition={{ duration: 0.3 }}
+            >
+              {answer.upvotes.toString()}
+            </motion.span>
+          </motion.div>
+
+          {/* Content Section */}
+          <div className="flex-1 space-y-4">
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <motion.div
+                className={cn(
+                  'text-sm',
+                  isBestAnswer ? 'text-yellow-800' : 'text-muted-foreground'
+                )}
+              >
+                By <span className="font-medium">{answer.responder}</span>
+                <span className="mx-2">•</span>
+                {formatDistanceToNow(
+                  new Date(Number(answer.createdAt) * 1000)
+                )}{' '}
+                ago
+              </motion.div>
             </div>
-          )}
+
+            {/* Answer Text */}
+            <motion.div
+              className={cn(
+                'prose max-w-none',
+                isBestAnswer ? 'text-yellow-900' : 'text-gray-800'
+              )}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              dangerouslySetInnerHTML={{ __html: answer.answerText }}
+            />
+
+            {/* Footer */}
+            <div className="flex items-center justify-between text-sm pt-4">
+              <motion.span
+                className={cn(
+                  'text-muted-foreground font-medium',
+                  isBestAnswer && 'text-yellow-800'
+                )}
+                whileHover={{ scale: 1.02 }}
+              >
+                Reward: {formatEther(answer.rewardAmount)} tokens
+              </motion.span>
+
+              {/* Select Best Answer Button */}
+              {canSelectBestAnswer && (
+                <motion.div whileHover={{ scale: 1.02 }}>
+                  <Button
+                    variant={isBestAnswer ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={onSelectBestAnswer}
+                    disabled={isSelecting}
+                    className={cn(
+                      'flex items-center gap-2 transition-all duration-300',
+                      isBestAnswer
+                        ? 'bg-yellow-500 text-white hover:bg-yellow-600 shadow-md'
+                        : 'hover:bg-yellow-50 hover:border-yellow-200'
+                    )}
+                  >
+                    <Award
+                      className={cn(
+                        'h-4 w-4 transition-transform',
+                        isBestAnswer ? 'text-white' : 'text-yellow-600'
+                      )}
+                    />
+                    {isSelecting ? (
+                      <motion.span
+                        animate={{ opacity: [0.5, 1] }}
+                        transition={{ repeat: Infinity, duration: 1 }}
+                      >
+                        Selecting...
+                      </motion.span>
+                    ) : (
+                      'Select Best Answer'
+                    )}
+                  </Button>
+                </motion.div>
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="flex-1 space-y-4">
-          <AnswerMetadata author={answer.author} createdAt={answer.createdAt} />
-          
-          <AnswerContent content={answer.content} />
-          
-          {answer.code && (
-            <CodeBlock code={answer.code} language="typescript" />
-          )}
-
-          <AnswerActions
-            hasComments={Boolean(answer.comments?.length)}
-            onToggleComments={() => setShowComments(!showComments)}
-            rewardAmount={answer.rewardAmount}
+        {/* Ambient Gradient Animation */}
+        {isBestAnswer && (
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-emerald-100/10 via-transparent to-emerald-200/20 pointer-events-none"
+            animate={{
+              backgroundPosition: ['0% 0%', '100% 100%'],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              repeatType: 'reverse',
+            }}
           />
-
-          {showComments && answer.comments && (
-            <div className="mt-4 space-y-3 pl-4 border-l-2">
-              {answer.comments.map((comment) => (
-                <div key={comment.id} className="text-sm">
-                  <span className="font-medium">{comment.author}</span>
-                  <span className="text-muted-foreground mx-2">•</span>
-                  <span className="text-muted-foreground">
-                    {formatDistanceToNow(new Date(comment.createdAt))} ago
-                  </span>
-                  <p className="mt-1">{comment.content}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </Card>
-  )
+        )}
+      </Card>
+    </motion.div>
+  );
 }
