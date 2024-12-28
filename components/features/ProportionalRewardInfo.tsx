@@ -1,20 +1,24 @@
-"use client"
+'use client';
 
-import { PieChart, DollarSign } from 'lucide-react'
-import { Card } from '@/components/ui/card'
-import { Progress } from '@/components/ui/progress'
+import { PieChart, DollarSign } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import { ContractAnswer } from '@/lib/hooks/useGetAnswersByQuestionId';
 
 interface RewardDistributionProps {
-  bountyAmount: number
-  answers: {
-    id: string
-    votes: number
-    author: string
-  }[]
+  bountyAmount: number;
+  answers: ContractAnswer[];
 }
 
-export function ProportionalRewardInfo({ bountyAmount, answers }: RewardDistributionProps) {
-  const totalVotes = answers.reduce((sum, answer) => sum + Math.max(0, answer.votes), 0)
+export function ProportionalRewardInfo({
+  bountyAmount,
+  answers,
+}: RewardDistributionProps) {
+  // Chuyển đổi upvotes sang number và tính tổng số vote
+  const totalVotes = answers.reduce(
+    (sum, answer) => sum + Number(answer.upvotes),
+    0
+  );
 
   return (
     <Card className="p-4 space-y-4">
@@ -22,16 +26,20 @@ export function ProportionalRewardInfo({ bountyAmount, answers }: RewardDistribu
         <PieChart className="h-5 w-5 text-primary" />
         <h3 className="font-semibold">Reward Distribution</h3>
       </div>
-      
+
       <div className="space-y-3">
         {answers.map((answer) => {
-          const percentage = totalVotes ? (Math.max(0, answer.votes) / totalVotes) * 100 : 0
-          const reward = Math.round((bountyAmount * percentage) / 100)
-          
+          // Chuyển đổi upvotes sang number
+          const votes = Number(answer.upvotes);
+
+          const percentage = totalVotes ? (votes / totalVotes) * 100 : 0;
+
+          const reward = Math.round((bountyAmount * percentage) / 100);
+
           return (
-            <div key={answer.id} className="space-y-1">
+            <div key={answer.id.toString()} className="space-y-1">
               <div className="flex justify-between text-sm">
-                <span>{answer.author}</span>
+                <span>{answer.responder}</span>
                 <span className="flex items-center">
                   <DollarSign className="h-4 w-4" />
                   {reward}
@@ -42,7 +50,7 @@ export function ProportionalRewardInfo({ bountyAmount, answers }: RewardDistribu
                 {percentage.toFixed(1)}% of total votes
               </div>
             </div>
-          )
+          );
         })}
       </div>
 
@@ -50,5 +58,5 @@ export function ProportionalRewardInfo({ bountyAmount, answers }: RewardDistribu
         Rewards are distributed proportionally based on upvotes
       </div>
     </Card>
-  )
+  );
 }

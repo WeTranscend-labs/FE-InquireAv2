@@ -1,10 +1,15 @@
 'use client';
 import { useState } from 'react';
-import { useReadContract } from 'wagmi';
+import {
+  useReadContract,
+  UseReadContractParameters,
+  UseReadContractReturnType,
+} from 'wagmi';
 import { contractABI } from '../contracts/contractABI';
+import { Address } from 'viem';
 
-// Định nghĩa kiểu dữ liệu cho Question từ contract
 export interface ContractQuestion {
+  id: bigint;
   asker: string;
   questionText: string;
   questionContent: string;
@@ -16,44 +21,67 @@ export interface ContractQuestion {
   chosenAnswerId: bigint;
 }
 
-export function useGetQuestions() {
+export function useGetQuestions(initialPageSize = 10) {
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(initialPageSize);
 
   const {
-    data: questions,
+    data: contractData,
     error,
     isLoading,
     refetch,
   } = useReadContract({
-    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
+    address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as Address,
     abi: contractABI,
     functionName: 'getQuestions',
     args: [page, pageSize],
     query: {
-      enabled: true, // Luôn cho phép query
-      staleTime: 1000 * 60 * 5, // Cache 5 phút
+      enabled: true,
+      staleTime: 1000 * 60 * 5,
     },
   });
 
-  // Hàm để thay đổi trang
+  const processContractData = () => {
+    if (!contractData || !Array.isArray(contractData)) {
+      return {
+        questions: [],
+        totalQuestions: 0,
+        totalPages: 0,
+      };
+    }
+
+    return {
+      questions: (contractData[0] as ContractQuestion[]) || [],
+      totalQuestions: contractData[1] as bigint,
+      totalPages: contractData[2] as bigint,
+    };
+  };
+
+  const { questions, totalQuestions, totalPages } = processContractData();
+
   const changePage = (newPage: number) => {
     setPage(newPage);
     refetch();
   };
 
-  // Hàm để thay đổi số lượng item trên trang
   const changePageSize = (newPageSize: number) => {
     setPageSize(newPageSize);
+    setPage(1);
     refetch();
   };
 
+  const pagination = {
+    currentPage: page,
+    pageSize,
+    totalQuestions,
+    totalPages,
+  };
+
   return {
-    questions: (questions as ContractQuestion[]) || [],
+    questions,
     error,
     isLoading,
-    page,
-    pageSize,
+    pagination,
     changePage,
     changePageSize,
     refetch,

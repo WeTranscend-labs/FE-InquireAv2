@@ -1,49 +1,51 @@
-"use client"
+'use client';
 
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { Card } from '@/components/ui/card'
-import { AlertCircle } from 'lucide-react'
-import { Alert } from '@/components/ui/alert'
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { AlertCircle } from 'lucide-react';
+import { Alert } from '@/components/ui/alert';
+import ContentEditor from '../common/ContentEditor';
 
 interface AnswerEditorProps {
-  questionId: string
-  onSubmit: (content: string) => Promise<void>
-  minimumLength?: number
+  questionId: string;
+  onSubmit: (content: string) => Promise<void>;
+  minimumLength?: number;
 }
 
-export function AnswerEditor({ 
-  questionId, 
+export function AnswerEditor({
+  questionId,
   onSubmit,
-  minimumLength = 100
+  minimumLength = 100,
 }: AnswerEditorProps) {
-  const [content, setContent] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [content, setContent] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (content.length < minimumLength) {
-      setError(`Answer must be at least ${minimumLength} characters long`)
-      return
+    const plainTextContent = content.replace(/<[^>]*>/g, '').trim();
+
+    if (plainTextContent.length < minimumLength) {
+      setError(`Answer must be at least ${minimumLength} characters long`);
+      return;
     }
 
     try {
-      setIsSubmitting(true)
-      setError(null)
-      await onSubmit(content)
-      setContent('')
+      setIsSubmitting(true);
+      setError(null);
+      await onSubmit(content);
+      setContent('');
     } catch (err) {
-      setError('Failed to submit answer. Please try again.')
+      setError('Failed to submit answer. Please try again.');
     } finally {
-      setIsSubmitting(false)
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Card className="p-6">
       <h3 className="text-xl font-semibold mb-4">Your Answer</h3>
-      
+
       {error && (
         <Alert variant="destructive" className="mb-4">
           <AlertCircle className="h-4 w-4" />
@@ -52,25 +54,27 @@ export function AnswerEditor({
       )}
 
       <div className="space-y-4">
-        <Textarea
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          placeholder="Write your answer here..."
-          className="min-h-[200px]"
+        <ContentEditor
+          initialValue={content}
+          onChange={(newContent) => setContent(newContent)}
         />
-        
+
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">
-            {content.length} / {minimumLength} characters minimum
+            {content.replace(/<[^>]*>/g, '').length} / {minimumLength}{' '}
+            characters minimum
           </span>
-          <Button 
+          <Button
             onClick={handleSubmit}
-            disabled={isSubmitting || content.length < minimumLength}
+            disabled={
+              isSubmitting ||
+              content.replace(/<[^>]*>/g, '').trim().length < minimumLength
+            }
           >
             {isSubmitting ? 'Submitting...' : 'Post Answer'}
           </Button>
         </div>
       </div>
     </Card>
-  )
+  );
 }

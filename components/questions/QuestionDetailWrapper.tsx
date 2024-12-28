@@ -1,61 +1,102 @@
-"use client"
+'use client';
 
-import { useState } from 'react'
-import QuestionDetail from './QuestionDetail'
-import AnswersList from './AnswersList'
-import { AutoSelectTimer } from '@/components/features/AutoSelectTimer'
-import { ProportionalRewardInfo } from '@/components/features/ProportionalRewardInfo'
-import { ArbitrationCase } from '@/components/features/ArbitrationCase'
-import { ReputationBadge } from '@/components/features/ReputationBadge'
-import { Card } from '@/components/ui/card'
-import { Separator } from '@/components/ui/separator'
-import { mockAnswers } from '@/lib/data/mock-answers'
-
-interface Question {
-  id: string
-  asker: string
-  questionText: string
-  rewardAmount: number
-  createdAt: number
-  isClosed: boolean
-  chosenAnswerId: number
-  deadline: string
-}
+import { useState } from 'react';
+import QuestionDetail from './QuestionDetail';
+import { useGetAnswersByQuestionId } from '@/lib/hooks/useGetAnswersByQuestionId';
+import AnswersList from './AnswersList';
+import { AutoSelectTimer } from '@/components/features/AutoSelectTimer';
+import { ProportionalRewardInfo } from '@/components/features/ProportionalRewardInfo';
+import { ArbitrationCase } from '@/components/features/ArbitrationCase';
+import { ReputationBadge } from '@/components/features/ReputationBadge';
+import { Card } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
+import { AnswerEditor } from './AnswerEditor';
+import { useAnswer } from '@/lib/hooks/useAnswer';
+import { ContractQuestion } from '@/lib/hooks/useGetQuestions';
+import { useToast } from '@/lib/hooks/use-toast';
+import { formatEther } from 'viem';
 
 interface QuestionDetailWrapperProps {
-  question: Question
+  question: ContractQuestion;
 }
 
-export default function QuestionDetailWrapper({ question }: QuestionDetailWrapperProps) {
-  const [isSubmittingCase, setIsSubmittingCase] = useState(false)
-  const answers = mockAnswers // Using mock data directly for now
+export default function QuestionDetailWrapper({
+  question,
+}: QuestionDetailWrapperProps) {
+  const { toast } = useToast();
+  const { submitAnswer } = useAnswer();
+  const [isSubmittingCase, setIsSubmittingCase] = useState(false);
+
+  // Sử dụng hook để lấy danh sách answers
+  const {
+    answers,
+    totalAnswers,
+    totalPages,
+    currentPage,
+    isLoading,
+    error,
+    changePage,
+  } = useGetAnswersByQuestionId(BigInt(question.id));
+
+  const handleSubmitAnswer = async (content: string) => {
+    try {
+      await submitAnswer({
+        questionId: BigInt(question.id),
+        answerText: content,
+      });
+
+      toast({
+        title: 'Answer Submitted Successfully',
+        description: 'Your answer has been posted to the blockchain.',
+        variant: 'default',
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: 'Submission Failed',
+        description: 'Unable to submit your answer. Please try again.',
+        variant: 'destructive',
+        duration: 3000,
+      });
+    }
+  };
 
   const handleArbitrationSubmit = async (description: string) => {
     try {
-      setIsSubmittingCase(true)
-      // Add your arbitration submission logic here
-      console.log('Submitting arbitration case:', description)
+      setIsSubmittingCase(true);
+      console.log('Submitting arbitration case:', description);
+
+      toast({
+        title: 'Arbitration Case Submitted',
+        description: 'Your arbitration case is being processed.',
+        variant: 'default',
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: 'Submission Failed',
+        description: 'Unable to submit arbitration case. Please try again.',
+        variant: 'destructive',
+        duration: 3000,
+      });
     } finally {
-      setIsSubmittingCase(false)
+      setIsSubmittingCase(false);
     }
-  }
+  };
 
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="grid grid-cols-[1fr,300px] gap-6">
-        <QuestionDetail 
-          question={question}
-          answersCount={answers.length}
-        />
-        
+        <QuestionDetail question={question} answersCount={totalAnswers} />
+
         <div className="space-y-4">
           <Card className="p-4 bg-primary/5">
-            <AutoSelectTimer 
-              deadline={question.deadline}
+            <AutoSelectTimer
+              deadline={new Date(Number(question.deadline) * 1000) + ''}
               onDeadlineReached={() => console.log('Deadline reached')}
             />
           </Card>
-          
+
           <Card className="p-4">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">Reputation</span>
@@ -68,31 +109,45 @@ export default function QuestionDetailWrapper({ question }: QuestionDetailWrappe
       {!question.isClosed && answers.length > 0 && (
         <Card className="p-6 bg-primary/5">
           <ProportionalRewardInfo
-            bountyAmount={question.rewardAmount}
-            answers={answers.map(a => ({
-              id: a.id,
-              votes: a.upvotes,
-              author: a.author.name
-            }))}
+            bountyAmount={Number(formatEther(question.rewardAmount))}
+            answers={answers}
           />
         </Card>
       )}
 
       <Separator className="my-8" />
 
-      <AnswersList 
-        answers={answers}
-        chosenAnswerId={question.chosenAnswerId}
-      />
-
       {!question.isClosed && (
         <Card className="p-6 border-destructive/20 bg-destructive/5">
-          <ArbitrationCase
-            questionId={question.id}
-            onSubmit={handleArbitrationSubmit}
+          <AnswerEditor
+            questionId={question.id + ''}
+            onSubmit={handleSubmitAnswer}
           />
         </Card>
       )}
+
+      {/* {!question.isClosed && (
+        <Card className="p-6 border-destructive/20 bg-destructive/5">
+          <ArbitrationCase
+            questionId={question.id + ''}
+            onSubmit={handleArbitrationSubmit}
+          />
+        </Card>
+      )} */}
+
+      {/* Hiển thị danh sách answers */}
+      <AnswersList
+        answers={answers}
+        totalPages={totalPages}
+        currentPage={currentPage}
+        onPageChange={changePage}
+        isLoading={isLoading}
+        error={error}
+        bestAnswer={question.chosenAnswerId}
+        questionAsker={question.asker}
+        questionId={BigInt(question.id)}
+        questionIsClosed={question.isClosed}
+      />
     </div>
-  )
+  );
 }

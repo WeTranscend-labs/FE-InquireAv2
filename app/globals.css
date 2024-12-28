@@ -80,3 +80,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.toast-success {
+  background-color: #4caf50;
+  color: white;
+  /* border-left: 5px solid #388e3c; */
+}
