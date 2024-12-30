@@ -34,15 +34,15 @@ export default function ContextProvider({ children }: { children: Props }) {
     const newTheme =
       theme === 'dark'
         ? darkTheme({
-            accentColor: '#ff8800',
-            accentColorForeground: 'white',
-            borderRadius: 'none',
-          })
+          accentColor: '#ff8800',
+          accentColorForeground: 'white',
+          borderRadius: 'none',
+        })
         : lightTheme({
-            accentColor: '#ff8800',
-            accentColorForeground: 'white',
-            borderRadius: 'none',
-          });
+          accentColor: '#ff8800',
+          accentColorForeground: 'white',
+          borderRadius: 'none',
+        });
 
     setRainbowKitTheme(newTheme);
   }, [theme]);
