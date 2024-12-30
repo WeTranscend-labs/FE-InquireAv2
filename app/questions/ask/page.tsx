@@ -8,7 +8,7 @@ export const metadata = {
 export default function AskQuestionPage() {
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-2">Ask a Question</h1>
         <p className="text-muted-foreground mb-8">
           Get help from the community by asking a clear, detailed question

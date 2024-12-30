@@ -1,4 +1,5 @@
 import { Editor } from '@tinymce/tinymce-react';
+import { useEffect, useState } from 'react';
 
 type Props = {
   initialValue: string;
@@ -6,6 +7,22 @@ type Props = {
 };
 
 const ContentEditor = ({ initialValue, onChange }: Props) => {
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      setIsDarkMode(isDark);
+
+    });
+
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+
+  }, []);
+  console.log(isDarkMode)
   const handleEditorChange = (content: string) => {
     if (onChange) {
       onChange(content);
@@ -17,7 +34,6 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
       apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
       init={{
         plugins: [
-          // Core editing features
           'anchor',
           'autolink',
           'charmap',
@@ -31,8 +47,6 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
           'table',
           'visualblocks',
           'wordcount',
-          // Your account includes a free trial of TinyMCE premium features
-          // Try the most popular premium features until Jan 11, 2025:
           'checklist',
           'mediaembed',
           'casechange',
@@ -47,7 +61,7 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
           'advcode',
           'editimage',
           'advtemplate',
-          'ai',
+
           'mentions',
           'tinycomments',
           'tableofcontents',
@@ -69,10 +83,8 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
           { value: 'First.Name', title: 'First Name' },
           { value: 'Email', title: 'Email' },
         ],
-        ai_request: (request: any, respondWith: any) =>
-          respondWith.string(() =>
-            Promise.reject('See docs to implement AI Assistant')
-          ),
+        skin: isDarkMode ? 'oxide-dark' : 'oxide', 
+        content_css: isDarkMode ? 'dark' : 'default',
       }}
       value={initialValue}
       onEditorChange={handleEditorChange}
