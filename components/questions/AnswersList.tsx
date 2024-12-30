@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { formatEther } from 'viem';
 import { useAccount } from 'wagmi';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useVoteForAnswer } from '@/lib/hooks/useVoteForAnswer';
 
 interface AnswersListProps {
   answers: ContractAnswer[];
@@ -43,14 +44,31 @@ export default function AnswersList({
   questionIsClosed,
 }: AnswersListProps) {
   const [votedAnswers, setVotedAnswers] = useState<Set<bigint>>(new Set());
+  const {
+    voteForAnswer,
+    isPending,
+    hash,
+    isConfirming,
+    isConfirmed,
+    error: voteError,
+  } = useVoteForAnswer();
   const { selectBestAnswer, isSelecting, isSuccess } = useSelectBestAnswer();
   const { address } = useAccount();
   const { toast } = useToast();
 
-  const handleUpvote = (answerId: bigint) => {
+  const handleUpvote = async (answerId: bigint) => {
     if (!votedAnswers.has(answerId)) {
       setVotedAnswers(new Set([...Array.from(votedAnswers), answerId]));
-      onUpvote?.(answerId);
+      try {
+        await voteForAnswer({ questionId, answerId });
+      } catch (err) {
+        console.error('Error voting for answer:', err);
+        toast({
+          title: 'Vote Failed',
+          description: 'There was an issue voting for this answer.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
