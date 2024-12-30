@@ -7,14 +7,9 @@ import { mockAnswers } from '@/lib/data/mock-questions';
 import { Loader2 } from 'lucide-react';
 
 export default function QuestionPage({ params }: { params: { id: string } }) {
-  // Chuyển đổi id sang bigint
   const questionId = BigInt(params.id);
 
-  // Sử dụng hook để fetch chi tiết câu hỏi
   const { question, error, isLoading } = useGetQuestionById(questionId);
-
-  // Lấy answers mock (sau này sẽ thay bằng hook answers)
-  const answers = mockAnswers[params.id as keyof typeof mockAnswers] || [];
 
   if (error) {
     return (
@@ -27,7 +22,6 @@ export default function QuestionPage({ params }: { params: { id: string } }) {
     );
   }
 
-  // Xử lý trạng thái loading
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -39,7 +33,6 @@ export default function QuestionPage({ params }: { params: { id: string } }) {
     );
   }
 
-  // Xử lý trường hợp không tìm thấy câu hỏi
   if (!question) {
     return (
       <div className="text-center py-12">
