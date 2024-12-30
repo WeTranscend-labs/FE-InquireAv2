@@ -19,7 +19,8 @@ export function HowItWorks() {
           const Icon = step.icon
           return (
             <ParallaxSection key={step.title} delay={index * 0.1}>
-              <Card className="p-6 relative group hover:shadow-lg transition-all duration-300">
+              <Card className="p-6 relative group hover:shadow-lg transition-all duration-300 min-h-[250px]">
+
                 <div className="absolute -top-3 -left-3 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold">
                   {index + 1}
                 </div>

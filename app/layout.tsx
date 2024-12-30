@@ -11,6 +11,8 @@ import dynamic from 'next/dynamic';
 import { Toaster } from '@/components/ui/toaster';
 import ContextProvider from '@/contexts/providers/ContextProvider';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { CollapsibleSidebar } from '@/components/layout/CollapsibleSidebar';
+import { Footer } from '@/components/layout/footer/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -36,14 +38,17 @@ export default function RootLayout({
         >
           <TooltipProvider>
             <ContextProvider>
+           
               <div className="min-h-screen flex flex-col bg-background">
+             
                 <MainNav />
-                <div className="flex-1 flex">
-                  <Sidebar />
-                  <main className="flex-1 pt-6">
-                    <div className="container mx-auto px-4">{children}</div>
+                <div className="flex-1 flex pt-16"> {/* Thêm padding-top để tránh dính vào nav */}
+                  <CollapsibleSidebar />
+                  <main className="flex-1 container mx-auto px-4 py-6">
+                    {children}
                   </main>
                 </div>
+                <Footer/>
               </div>
               <Toaster />
             </ContextProvider>

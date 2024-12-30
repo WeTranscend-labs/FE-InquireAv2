@@ -24,9 +24,9 @@ export default function Home() {
       <ScrollReveal>
         <HeroSection />
       </ScrollReveal>
-      <ScrollReveal delay={0.1}>
+      {/* <ScrollReveal delay={0.1}>
         <ParallaxFeatures />
-      </ScrollReveal>
+      </ScrollReveal> */}
       <ScrollReveal delay={0.1}>
         <HowItWorks />
       </ScrollReveal>
