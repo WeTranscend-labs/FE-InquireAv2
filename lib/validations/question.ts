@@ -10,8 +10,8 @@ export const questionSchema = z.object({
     .min(50, 'Question details must be at least 50 characters long'),
   bounty: z
     .number()
-    .min(1, 'Minimum bounty is 1 tokens')
-    .max(1000, 'Maximum bounty is 1000 tokens'),
+    .min(0.01, 'Minimum bounty is 1 tokens')
+    .max(10, 'Maximum bounty is 1000 tokens'),
   tags: z
     .array(z.string())
     .min(1, 'Add at least one tag')

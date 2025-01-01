@@ -42,7 +42,7 @@ export function QuestionForm() {
     defaultValues: {
       title: '',
       content: '',
-      bounty: 1,
+      bounty: 0.01,
       tags: [],
     },
   });
