@@ -29,7 +29,7 @@ InquireA is a decentralized Q&A platform built on blockchain technology to enhan
 
 The InquireA platform is live and can be accessed at:
 
-**Deployment Link**: [https://inquirea-platform.example](https://inquirea-platform.example)
+**Deployment Link**: [https://inquire-a.vercel.app](https://inquire-a.vercel.app)
 
 You can explore the platform, post questions, answer queries, and interact with other users in a decentralized environment, all powered by blockchain technology.
 
@@ -44,7 +44,7 @@ Follow the steps below to set up the project locally.
 ### Installation
 1. Clone the repository:
    ```bash
-   git clone https://github.com/WeTranscend-labs/FE-InquireA.git
+   git clone https://github.com/Quantaphocpython/_InquireA.git
    cd _InquireA
    ```
 2. Install dependencies:
