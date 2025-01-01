@@ -1,5 +1,6 @@
 import { Editor } from '@tinymce/tinymce-react';
-import { useEffect, useState } from 'react';
+import { useTheme } from 'next-themes';
+import { useState, useEffect } from 'react';
 
 type Props = {
   initialValue: string;
@@ -7,22 +8,13 @@ type Props = {
 };
 
 const ContentEditor = ({ initialValue, onChange }: Props) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
+  const { theme } = useTheme();
+  const [editorKey, setEditorKey] = useState(0);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const observer = new MutationObserver(() => {
-      const isDark = root.getAttribute('data-theme') === 'dark';
-      setIsDarkMode(isDark);
+    setEditorKey((prevKey) => prevKey + 1);
+  }, [theme]);
 
-    });
-
-    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
-    return () => observer.disconnect();
-
-  }, []);
-  console.log(isDarkMode)
   const handleEditorChange = (content: string) => {
     if (onChange) {
       onChange(content);
@@ -31,6 +23,7 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
 
   return (
     <Editor
+      key={editorKey}
       apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY}
       init={{
         plugins: [
@@ -61,7 +54,6 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
           'advcode',
           'editimage',
           'advtemplate',
-
           'mentions',
           'tinycomments',
           'tableofcontents',
@@ -83,8 +75,8 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
           { value: 'First.Name', title: 'First Name' },
           { value: 'Email', title: 'Email' },
         ],
-        skin: isDarkMode ? 'oxide-dark' : 'oxide', 
-        content_css: isDarkMode ? 'dark' : 'default',
+        skin: theme === 'dark' ? 'oxide-dark' : 'oxide',
+        content_css: theme === 'dark' ? 'dark' : 'default',
       }}
       value={initialValue}
       onEditorChange={handleEditorChange}
