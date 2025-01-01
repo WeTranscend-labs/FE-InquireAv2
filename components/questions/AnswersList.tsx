@@ -146,7 +146,7 @@ export default function AnswersList({
       {bestAnswerObj && (
         <div className="mb-6">
           <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-            <Crown className="h-6 w-6 text-yellow-500" />
+            <Crown className="h-6 w-6 " />
             Best Answer
           </h3>
           <AnswerCard
@@ -227,7 +227,7 @@ export function AnswerCard({
         className={cn(
           'p-6 transition-all duration-500 relative overflow-hidden group border',
           isBestAnswer
-            ? 'border-2 border-emerald-500/70 bg-gradient-to-br from-emerald-50 via-emerald-50/50 to-emerald-100/30 shadow-2xl'
+            ? 'border-2 border-emerald-500/70 bg-transparent shadow-2xl'
             : 'hover:shadow-lg border-transparent hover:border-gray-200',
           'transform-gpu hover:scale-[1.01] transition-transform duration-300'
         )}
@@ -284,7 +284,7 @@ export function AnswerCard({
             <motion.span
               className={cn(
                 'font-medium text-lg',
-                isBestAnswer && 'text-yellow-700 font-bold'
+                isBestAnswer && ' font-bold'
               )}
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 0.3 }}
@@ -300,10 +300,10 @@ export function AnswerCard({
               <motion.div
                 className={cn(
                   'text-sm',
-                  isBestAnswer ? 'text-yellow-800' : 'text-muted-foreground'
+                  isBestAnswer ? '' : 'text-muted-foreground'
                 )}
               >
-                By <span className="font-medium">{answer.responder}</span>
+                By <span className="font-bold">{answer.responder}</span>
                 <span className="mx-2">•</span>
                 {formatDistanceToNow(
                   new Date(Number(answer.createdAt) * 1000)
@@ -314,7 +314,7 @@ export function AnswerCard({
 
             {/* Answer Text */}
             <motion.div
-              className={cn(isBestAnswer ? 'text-yellow-900' : '')}
+              className={cn(isBestAnswer ? '' : '')}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1 }}
@@ -327,7 +327,7 @@ export function AnswerCard({
               <motion.span
                 className={cn(
                   'text-muted-foreground font-medium',
-                  isBestAnswer && 'text-yellow-800'
+                  isBestAnswer && ''
                 )}
                 whileHover={{ scale: 1.02 }}
               >
@@ -352,7 +352,7 @@ export function AnswerCard({
                     <Award
                       className={cn(
                         'h-4 w-4 transition-transform',
-                        isBestAnswer ? 'text-white' : 'text-yellow-600'
+                        isBestAnswer ? 'text-white' : ''
                       )}
                     />
                     {isSelecting ? (
