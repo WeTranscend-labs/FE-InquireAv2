@@ -1,16 +1,15 @@
 'use client';
 
-import Link from 'next/link';
-import { Button } from './ui/button';
-import { ModeToggle } from './mode-toggle';
 import {
   CircleDollarSign,
-  Home,
-  PlusCircle,
-  User,
   MessageSquare,
+  PlusCircle,
   Tag,
+  User,
 } from 'lucide-react';
+import Link from 'next/link';
+import { ModeToggle } from './mode-toggle';
+import { Button } from './ui/button';
 
 export default function Navbar() {
   return (

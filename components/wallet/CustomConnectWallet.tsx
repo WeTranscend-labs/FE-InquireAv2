@@ -2,17 +2,15 @@
 
 import { Button } from '@/components/ui/button';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { useTheme } from 'next-themes';
-import { useEffect } from 'react';
-import { cn } from '@/lib/utils';
 import {
   ChevronDown,
   NetworkIcon,
   OctagonAlert,
   PlugIcon,
   Wallet2Icon,
-  WalletIcon,
 } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect } from 'react';
 import CopyClipboard from '../common/CopyClipboard';
 
 export function CustomConnectButton() {
