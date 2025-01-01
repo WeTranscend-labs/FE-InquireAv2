@@ -1,23 +1,16 @@
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { CircleDollarSign, TrendingUp, Users, ArrowRight } from 'lucide-react'
-import Link from 'next/link'
-import QuestionsList from '@/components/questions-list'
-import { HeroSection } from '@/components/home/HeroSection'
-import { StatsSection } from '@/components/home/StatsSection'
-import { FeaturedQuestions } from '@/components/home/FeaturedQuestions'
-import { TopContributors } from '@/components/home/TopContributors'
-import { TrendingTags } from '@/components/home/TrendingTags'
-import { WelcomeBanner } from '@/components/home/WelcomeBanner'
-import { HowItWorks } from '@/components/home/HowItWorks'
-import { ParallaxFeatures } from '@/components/home/ParallaxFeatures'
-import { CommunityHighlights } from '@/components/home/CommunityHighlights'
-import { FeaturedProjects } from '@/components/home/FeaturedProjects'
-import { NewsletterSection } from '@/components/home/NewsletterSection'
-import { ScrollReveal } from '@/components/animation/ScrollReveal'
+import { ScrollReveal } from '@/components/animation/ScrollReveal';
+import { CommunityHighlights } from '@/components/home/CommunityHighlights';
+import { FeaturedProjects } from '@/components/home/FeaturedProjects';
+import { FeaturedQuestions } from '@/components/home/FeaturedQuestions';
+import { HeroSection } from '@/components/home/HeroSection';
+import { HowItWorks } from '@/components/home/HowItWorks';
+import { NewsletterSection } from '@/components/home/NewsletterSection';
+import { StatsSection } from '@/components/home/StatsSection';
+import { TopContributors } from '@/components/home/TopContributors';
+import { TrendingTags } from '@/components/home/TrendingTags';
+import { WelcomeBanner } from '@/components/home/WelcomeBanner';
 export default function Home() {
   return (
-
     <div className="space-y-24 pb-24">
       <WelcomeBanner />
 
@@ -54,5 +47,5 @@ export default function Home() {
         <NewsletterSection />
       </ScrollReveal>
     </div>
-  )
+  );
 }

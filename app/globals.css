@@ -3,8 +3,14 @@
 @tailwind utilities;
 
 body {
-  overflow: auto !important;
+  overflow-y: scroll !important;
 }
+
+body.modal-open {
+  overflow: hidden;
+  padding-right: var(--scrollbar-compensation);
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -81,6 +87,10 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    @apply overflow-y-scroll !important;
+  }
+  .rk-modal {
+    @apply overflow-y-auto !important;
   }
 }
 

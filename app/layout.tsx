@@ -1,5 +1,4 @@
 import { MainNav } from '@/components/layout/MainNav';
-import { Sidebar } from '@/components/layout/Sidebar';
 import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
@@ -7,12 +6,11 @@ import './globals.css';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
-import dynamic from 'next/dynamic';
+import { CollapsibleSidebar } from '@/components/layout/CollapsibleSidebar';
+import { Footer } from '@/components/layout/footer/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import ContextProvider from '@/contexts/providers/ContextProvider';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
-import { CollapsibleSidebar } from '@/components/layout/CollapsibleSidebar';
-import { Footer } from '@/components/layout/footer/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -38,17 +36,16 @@ export default function RootLayout({
         >
           <TooltipProvider>
             <ContextProvider>
-           
               <div className="min-h-screen flex flex-col bg-background">
-             
                 <MainNav />
-                <div className="flex-1 flex pt-16"> {/* Thêm padding-top để tránh dính vào nav */}
+                <div className="flex-1 flex pt-16">
+                  {' '}
                   <CollapsibleSidebar />
                   <main className="flex-1 container mx-auto px-4 py-6">
                     {children}
                   </main>
                 </div>
-                <Footer/>
+                <Footer />
               </div>
               <Toaster />
             </ContextProvider>

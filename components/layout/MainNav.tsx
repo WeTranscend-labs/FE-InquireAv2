@@ -24,12 +24,12 @@ export function MainNav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled
           ? 'bg-background/80 backdrop-blur-lg shadow-lg'
           : 'bg-transparent'
-        }`}
+      }`}
     >
-
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo và Navigation */}
         <div className="flex items-center gap-6">
@@ -69,7 +69,7 @@ export function MainNav() {
 
         {/* Công cụ và nút hành động */}
         <div className="flex items-center gap-4">
-          <ModeToggle  />
+          <ModeToggle />
           <Button asChild>
             <Link href="/questions/ask">Ask Question</Link>
           </Button>
