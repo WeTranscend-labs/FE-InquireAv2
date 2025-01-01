@@ -97,12 +97,12 @@ body.modal-open {
 .toast-success {
   background-color: #4caf50;
   color: white;
-  /* border-left: 5px solid #388e3c; */
 }
 
 code {
   font-family: 'Fira Code', monospace;
   font-size: 1rem;
+  color: #333;
 }
 
 pre {
@@ -110,9 +110,23 @@ pre {
   padding: 16px;
   border-radius: 8px;
   overflow-x: auto;
-  white-space: pre-wrap; /* Make the content wrap if it's too long */
+  white-space: pre-wrap;
+  color: #333;
 }
 
 pre code {
   font-family: 'Fira Code', monospace;
+}
+
+.dark code {
+  color: #dcdcdc;
+}
+
+.dark pre {
+  background-color: #2d2d2d;
+  color: #dcdcdc;
+}
+
+.dark pre code {
+  color: #dcdcdc;
 }

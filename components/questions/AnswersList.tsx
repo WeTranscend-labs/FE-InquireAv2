@@ -13,6 +13,7 @@ import { Award, Crown, MessageSquare, ThumbsUp } from 'lucide-react';
 import { useState } from 'react';
 import { formatEther } from 'viem';
 import { useAccount } from 'wagmi';
+import { AnswerContent } from './AnswerContent';
 
 interface AnswersListProps {
   answers: ContractAnswer[];
@@ -313,15 +314,13 @@ export function AnswerCard({
 
             {/* Answer Text */}
             <motion.div
-              className={cn(
-                'prose max-w-none',
-                isBestAnswer ? 'text-yellow-900' : 'text-gray-800'
-              )}
+              className={cn(isBestAnswer ? 'text-yellow-900' : '')}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1 }}
-              dangerouslySetInnerHTML={{ __html: answer.answerText }}
-            />
+            >
+              <AnswerContent content={answer.answerText} />
+            </motion.div>
 
             {/* Footer */}
             <div className="flex items-center justify-between text-sm pt-4">
