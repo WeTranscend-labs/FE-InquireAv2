@@ -1,9 +1,8 @@
 'use client';
 
-import { PieChart, DollarSign } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { ContractAnswer } from '@/lib/hooks/useGetAnswersByQuestionId';
+import { DollarSign, PieChart } from 'lucide-react';
 
 interface RewardDistributionProps {
   bountyAmount: number;
@@ -45,7 +44,7 @@ export function ProportionalRewardInfo({
                   {reward}
                 </span>
               </div>
-              <Progress value={percentage} className="h-2" />
+              {/* <Progress value={percentage} className="h-2" /> */}
               <div className="text-xs text-muted-foreground text-right">
                 {percentage.toFixed(1)}% of total votes
               </div>

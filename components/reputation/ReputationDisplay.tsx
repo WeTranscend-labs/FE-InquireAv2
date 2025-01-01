@@ -1,15 +1,14 @@
-"use client"
+'use client';
 
-import { Card } from '@/components/ui/card'
-import { Shield, TrendingUp, CircleDollarSign } from 'lucide-react'
-import { useReputation } from '@/lib/hooks/useReputation'
-import { Progress } from '@/components/ui/progress'
+import { Card } from '@/components/ui/card';
+import { useReputation } from '@/lib/hooks/useReputation';
+import { CircleDollarSign, Shield, TrendingUp } from 'lucide-react';
 
 export function ReputationDisplay() {
-  const { reputation, getDiscountRate, getTrustLevel } = useReputation()
-  const discountPercent = (1 - getDiscountRate()) * 100
-  const nextTier = reputation >= 1000 ? null : reputation >= 500 ? 1000 : 500
-  const progress = nextTier ? (reputation / nextTier) * 100 : 100
+  const { reputation, getDiscountRate, getTrustLevel } = useReputation();
+  const discountPercent = (1 - getDiscountRate()) * 100;
+  const nextTier = reputation >= 1000 ? null : reputation >= 500 ? 1000 : 500;
+  const progress = nextTier ? (reputation / nextTier) * 100 : 100;
 
   return (
     <Card className="p-6 space-y-6">
@@ -19,7 +18,9 @@ export function ReputationDisplay() {
         </div>
         <div>
           <h3 className="font-semibold">{getTrustLevel()}</h3>
-          <p className="text-sm text-muted-foreground">{reputation} reputation points</p>
+          <p className="text-sm text-muted-foreground">
+            {reputation} reputation points
+          </p>
         </div>
       </div>
 
@@ -29,7 +30,7 @@ export function ReputationDisplay() {
             <span className="text-muted-foreground">Next tier</span>
             <span>{nextTier - reputation} points needed</span>
           </div>
-          <Progress value={progress} className="h-2" />
+          {/* <Progress value={progress} className="h-2" /> */}
         </div>
       )}
 
@@ -39,7 +40,9 @@ export function ReputationDisplay() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-medium">Trust Score</span>
           </div>
-          <p className="text-2xl font-bold">{Math.min(100, Math.floor(reputation / 10))}%</p>
+          <p className="text-2xl font-bold">
+            {Math.min(100, Math.floor(reputation / 10))}%
+          </p>
         </div>
         <div className="space-y-1">
           <div className="flex items-center gap-2">
@@ -50,5 +53,5 @@ export function ReputationDisplay() {
         </div>
       </div>
     </Card>
-  )
+  );
 }

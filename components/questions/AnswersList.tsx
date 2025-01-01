@@ -5,15 +5,14 @@ import { Card } from '@/components/ui/card';
 import { useToast } from '@/lib/hooks/use-toast';
 import { ContractAnswer } from '@/lib/hooks/useGetAnswersByQuestionId';
 import { useSelectBestAnswer } from '@/lib/hooks/useSelectBestAnswer';
+import { useVoteForAnswer } from '@/lib/hooks/useVoteForAnswer';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
-import { BigIntStatsFs } from 'fs';
-import { Award, Crown, CrownIcon, MessageSquare, ThumbsUp } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Award, Crown, MessageSquare, ThumbsUp } from 'lucide-react';
 import { useState } from 'react';
 import { formatEther } from 'viem';
 import { useAccount } from 'wagmi';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useVoteForAnswer } from '@/lib/hooks/useVoteForAnswer';
 
 interface AnswersListProps {
   answers: ContractAnswer[];
@@ -378,9 +377,9 @@ export function AnswerCard({
         {isBestAnswer && (
           <motion.div
             className="absolute inset-0 bg-gradient-to-br from-emerald-100/10 via-transparent to-emerald-200/20 pointer-events-none"
-            animate={{
-              backgroundPosition: ['0% 0%', '100% 100%'],
-            }}
+            // animate={{
+            //   backgroundPosition: ['0% 0%', '100% 100%'],
+            // }}
             transition={{
               duration: 10,
               repeat: Infinity,

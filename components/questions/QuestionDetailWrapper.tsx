@@ -1,20 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import QuestionDetail from './QuestionDetail';
-import { useGetAnswersByQuestionId } from '@/lib/hooks/useGetAnswersByQuestionId';
-import AnswersList from './AnswersList';
 import { AutoSelectTimer } from '@/components/features/AutoSelectTimer';
 import { ProportionalRewardInfo } from '@/components/features/ProportionalRewardInfo';
-import { ArbitrationCase } from '@/components/features/ArbitrationCase';
 import { ReputationBadge } from '@/components/features/ReputationBadge';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { AnswerEditor } from './AnswerEditor';
-import { useAnswer } from '@/lib/hooks/useAnswer';
-import { ContractQuestion } from '@/lib/hooks/useGetQuestions';
 import { useToast } from '@/lib/hooks/use-toast';
+import { useAnswer } from '@/lib/hooks/useAnswer';
+import { useGetAnswersByQuestionId } from '@/lib/hooks/useGetAnswersByQuestionId';
+import { ContractQuestion } from '@/lib/hooks/useGetQuestions';
+import { useState } from 'react';
 import { formatEther } from 'viem';
+import { AnswerEditor } from './AnswerEditor';
+import AnswersList from './AnswersList';
+import QuestionDetail from './QuestionDetail';
 
 interface QuestionDetailWrapperProps {
   question: ContractQuestion;

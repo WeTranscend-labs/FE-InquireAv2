@@ -42,11 +42,9 @@ export function useGetQuestionById(initialQuestionId?: bigint) {
     },
   });
 
-  // Xử lý dữ liệu an toàn với type guard
   const processedQuestion: ContractQuestion | undefined = (() => {
     if (!contractData) return undefined;
 
-    // Sử dụng type guard để kiểm tra dữ liệu
     if (!isValidContractData(contractData)) {
       console.error('Invalid contract data', contractData);
       return undefined;

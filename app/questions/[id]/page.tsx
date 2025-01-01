@@ -1,10 +1,9 @@
 'use client';
 
-import { Suspense } from 'react';
 import QuestionDetailWrapper from '@/components/questions/QuestionDetailWrapper';
 import { useGetQuestionById } from '@/lib/hooks/useGetQuestionById';
-import { mockAnswers } from '@/lib/data/mock-questions';
 import { Loader2 } from 'lucide-react';
+import { Suspense } from 'react';
 
 export default function QuestionPage({ params }: { params: { id: string } }) {
   const questionId = BigInt(params.id);
