@@ -1,11 +1,15 @@
-"use client"
+'use client';
 
-import { Card } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Separator } from '@/components/ui/separator'
-import { Clock, TrendingUp, Award, MessageSquare } from 'lucide-react'
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { Clock, TrendingUp, Award, MessageSquare } from 'lucide-react';
 
-export function QuestionFilters() {
+interface QuestionFiltersProps {
+  onFilterChange: (filter: string) => void;
+}
+
+export function QuestionFilters({ onFilterChange }: QuestionFiltersProps) {
   return (
     <Card className="p-4">
       <div className="space-y-4">
@@ -16,6 +20,7 @@ export function QuestionFilters() {
               <button
                 key={filter.name}
                 className="flex items-center gap-2 w-full p-2 rounded-md hover:bg-secondary text-sm"
+                onClick={() => onFilterChange(filter.name)}
               >
                 <filter.icon className="h-4 w-4" />
                 <span>{filter.name}</span>
@@ -26,14 +31,17 @@ export function QuestionFilters() {
             ))}
           </div>
         </div>
-
         <Separator />
-
         <div>
           <h3 className="font-medium mb-2">Popular Tags</h3>
           <div className="flex flex-wrap gap-2">
             {popularTags.map((tag) => (
-              <Badge key={tag.name} variant="secondary" className="cursor-pointer">
+              <Badge
+                key={tag.name}
+                variant="secondary"
+                className="cursor-pointer"
+                onClick={() => onFilterChange(tag.name)}
+              >
                 {tag.name}
               </Badge>
             ))}
@@ -41,7 +49,7 @@ export function QuestionFilters() {
         </div>
       </div>
     </Card>
-  )
+  );
 }
 
 const filters = [
@@ -49,7 +57,7 @@ const filters = [
   { name: 'Most Voted', icon: TrendingUp, count: 89 },
   { name: 'Highest Bounty', icon: Award, count: 56 },
   { name: 'Unanswered', icon: MessageSquare, count: 23 },
-]
+];
 
 const popularTags = [
   { name: 'react' },
@@ -57,4 +65,4 @@ const popularTags = [
   { name: 'typescript' },
   { name: 'javascript' },
   { name: 'tailwindcss' },
-]
+];

@@ -1,15 +1,26 @@
-"use client"
+"use client";
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
-export function QuestionsSort() {
+interface QuestionsSortProps {
+  sortOption: string;
+  onSortChange: (value: string) => void;
+}
+
+export function QuestionsSort({ sortOption, onSortChange }: QuestionsSortProps) {
   return (
     <div className="flex justify-end">
-      <Select defaultValue="newest">
+      <Select value={sortOption} onValueChange={onSortChange}>
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Sort by" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent >
           <SelectItem value="newest">Newest</SelectItem>
           <SelectItem value="votes">Most Votes</SelectItem>
           <SelectItem value="bounty">Highest Bounty</SelectItem>
@@ -17,5 +28,5 @@ export function QuestionsSort() {
         </SelectContent>
       </Select>
     </div>
-  )
+  );
 }
