@@ -1,26 +1,28 @@
-import { QuestionsHeader } from '@/components/questions/QuestionsHeader'
-import { QuestionFilters } from '@/components/questions/QuestionFilters'
-import QuestionsList from '@/components/questions/QuestionsList'
-import { QuestionsSort } from '@/components/questions/QuestionsSort'
+"use client";
 
-export const metadata = {
-  title: 'Questions - DevForum',
-  description: 'Browse and search developer questions',
-}
+import { useState } from 'react';
+import { QuestionsHeader } from '@/components/questions/QuestionsHeader';
+import { QuestionFilters } from '@/components/questions/QuestionFilters';
+import QuestionsList from '@/components/questions/QuestionsList';
+import { QuestionsSort } from '@/components/questions/QuestionsSort';
 
 export default function QuestionsPage() {
+  const [selectedFilter, setSelectedFilter] = useState<string>('Recent');
+
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       <QuestionsHeader />
-      
       <div className="grid grid-cols-1 lg:grid-cols-[240px,1fr] gap-8">
-        <QuestionFilters />
-        
+        <QuestionFilters onFilterChange={handleFilterChange} />
         <div className="space-y-4">
-          <QuestionsSort />
-          <QuestionsList />
+    
+          <QuestionsList filter={selectedFilter} />
         </div>
       </div>
     </div>
-  )
+  );
 }

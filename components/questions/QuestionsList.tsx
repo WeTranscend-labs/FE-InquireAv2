@@ -1,18 +1,48 @@
 'use client';
 
-import { useGetQuestions } from '@/lib/hooks/useGetQuestions';
+import { ContractQuestion, useGetQuestions } from '@/lib/hooks/useGetQuestions';
 import { QuestionCard } from './QuestionCard';
 import { formatEther } from 'viem';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useEffect, useState } from 'react';
+import { QuestionsSort } from './QuestionsSort';
 
-export default function QuestionsList() {
+export default function QuestionsList({ filter }: { filter: string | null }) {
   const { questions, isLoading, pagination, changePage } = useGetQuestions();
-  const { currentPage, totalPages } = pagination;
+  const [filteredQuestions, setFilteredQuestions] = useState<ContractQuestion[]>([]);
+  const [sortOption, setSortOption] = useState<string>('newest');
+  const [loading, setLoading] = useState(false);
 
-  console.log(questions);
+  const { currentPage, totalPages } = pagination ?? { currentPage: 1, totalPages: 1 };
 
-  if (isLoading) {
+  useEffect(() => {
+    setLoading(true);
+
+    let updatedQuestions = questions.filter((question) => {
+      if (filter === 'Recent') return true;
+      if (filter === 'Most Voted') return false; // Không có `votes`, giữ false.
+      if (filter === 'Highest Bounty') return question.rewardAmount > BigInt(30);
+      if (filter === 'Unanswered') return question.isClosed === false && !question.chosenAnswerId;
+      return question.category.toLowerCase().includes(filter?.toLowerCase() || '');
+    });
+
+    // Sắp xếp theo sortOption
+    updatedQuestions = updatedQuestions.sort((a, b) => {
+      if (sortOption === 'newest') return Number(b.createdAt) - Number(a.createdAt);
+      if (sortOption === 'votes') return 0; // Tạm để 0 vì không có `votes`.
+      if (sortOption === 'bounty') return Number(b.rewardAmount) - Number(a.rewardAmount);
+      if (sortOption === 'answers') return 0; // Tạm để 0 vì không có `answers`.
+      return 0;
+    });
+
+    setTimeout(() => {
+      setFilteredQuestions(updatedQuestions);
+      setLoading(false);
+    }, 200);
+  }, [filter, questions, sortOption]);
+
+  if (loading) {
     return (
       <div className="space-y-4">
         {[1, 2, 3].map((_, index) => (
@@ -22,19 +52,21 @@ export default function QuestionsList() {
     );
   }
 
-  if (questions.length === 0) {
+  if (filteredQuestions.length === 0) {
     return (
       <div className="flex items-center justify-center h-[300px]">
-        <p className="text-gray-500 text-lg">
-          There are currently no questions available.
-        </p>
+        <p className="text-gray-500 text-lg">No questions found for the selected filter and sort option.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      {questions.map((question, index) => (
+      {/* Thành phần Sort */}
+      <QuestionsSort sortOption={sortOption} onSortChange={setSortOption} />
+
+      {/* Danh sách câu hỏi */}
+      {filteredQuestions.map((question) => (
         <QuestionCard
           key={question.id.toString()}
           question={{
@@ -42,28 +74,28 @@ export default function QuestionsList() {
             title: question.questionText,
             content: question.questionContent,
             bounty: Number(formatEther(question.rewardAmount)),
-            answers: 0,
-            votes: 0,
-            tags: question.category?.split(',') || [],
+            answers: 0, 
+            votes: 0, 
+            tags: question.category.split(',').map((tag: any) => tag.trim()), 
             author: question.asker,
             createdAt: new Date(Number(question.createdAt) * 1000),
           }}
         />
       ))}
 
-      {/* Phân trang */}
+      {/* Điều hướng phân trang */}
       <div className="flex justify-between mt-4">
         <Button
           variant="outline"
           onClick={() => changePage(currentPage - 1)}
-          disabled={currentPage === 1}
+          disabled={currentPage <= 1}
         >
           Previous
         </Button>
         <Button
           variant="outline"
           onClick={() => changePage(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage >= totalPages}
         >
           Next
         </Button>
@@ -71,42 +103,3 @@ export default function QuestionsList() {
     </div>
   );
 }
-
-const questions = [
-  {
-    id: '1',
-    title: 'How to implement authentication in Next.js 13 with Supabase?',
-    content:
-      "I'm trying to implement authentication in my Next.js 13 application using Supabase. I've followed the documentation but I'm running into issues with the server components...",
-    bounty: 50,
-    answers: 3,
-    votes: 12,
-    tags: ['next.js', 'supabase', 'authentication'],
-    author: 'johndoe',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
-  },
-  {
-    id: '2',
-    title: 'Best practices for handling state in React components',
-    content:
-      "What are the current best practices for managing state in React components? I'm specifically interested in complex forms and data fetching scenarios...",
-    bounty: 30,
-    answers: 5,
-    votes: 8,
-    tags: ['react', 'javascript', 'state-management'],
-    author: 'janedoe',
-    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
-  },
-  {
-    id: '3',
-    title: 'Understanding TypeScript generics with React',
-    content:
-      "I'm having trouble understanding how to properly use TypeScript generics with React components. Specifically, I'm trying to create a reusable form component...",
-    bounty: 45,
-    answers: 2,
-    votes: 6,
-    tags: ['typescript', 'react', 'generics'],
-    author: 'alexsmith',
-    createdAt: new Date(Date.now() - 1000 * 60 * 30),
-  },
-];
