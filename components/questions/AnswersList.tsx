@@ -9,11 +9,16 @@ import { useVoteForAnswer } from '@/lib/hooks/useVoteForAnswer';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Award, Crown, MessageSquare, ThumbsUp } from 'lucide-react';
+import { Award, ChevronsUp, Crown, MessageSquare } from 'lucide-react';
 import { useState } from 'react';
 import { formatEther } from 'viem';
 import { useAccount } from 'wagmi';
 import { AnswerContent } from './AnswerContent';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@radix-ui/react-tooltip';
 
 interface AnswersListProps {
   answers: ContractAnswer[];
@@ -277,9 +282,19 @@ export function AnswerCard({
               )}
               disabled={hasVoted}
             >
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <ThumbsUp className="h-5 w-5" />
-              </motion.div>
+              <Tooltip>
+                <TooltipTrigger>
+                  <motion.div
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                  >
+                    <ChevronsUp className="h-5 w-5" />
+                  </motion.div>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  <Button variant="link">Upvote</Button>
+                </TooltipContent>
+              </Tooltip>
             </Button>
             <motion.span
               className={cn(

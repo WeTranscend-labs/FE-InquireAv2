@@ -10,6 +10,8 @@ import { TopContributors } from '@/components/home/TopContributors';
 import { TrendingTags } from '@/components/home/TrendingTags';
 import { WelcomeBanner } from '@/components/home/WelcomeBanner';
 export default function Home() {
+  
+
   return (
     <div className="space-y-24 pb-24">
       <WelcomeBanner />

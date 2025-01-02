@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   title: 'InquireA - Ask, Answer & Earn',
   description:
     'A blockchain-powered Q&A platform where knowledge meets rewards',
+  icons: {
+    icon: '/imgs/logo.png',
+  },
 };
 
 export default function RootLayout({
