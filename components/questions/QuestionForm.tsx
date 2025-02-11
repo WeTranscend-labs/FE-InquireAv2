@@ -150,10 +150,8 @@ export function QuestionForm() {
     );
   }
 
-  console.log(isConfirmed);
-
   return (
-    <div className="grid md:grid-cols-[1fr,300px] gap-8">
+    <div className="grid md:grid-cols-[1fr] gap-8">
       <div className="space-y-6">
         {(submitError || contractError) && (
           <Alert variant="destructive">
@@ -164,19 +162,16 @@ export function QuestionForm() {
           </Alert>
         )}
 
+        <div className="space-y-6">
+          <MinimumFeeInfo minimumFee={1} userReputation={1} />
+        </div>
+
         <Card className="p-6">
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <QuestionFormFields />
 
               <div className="flex justify-end gap-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowPreview(true)}
-                >
-                  Preview
-                </Button>
                 <Button type="submit" disabled={isPending || isConfirming}>
                   {isPending ? (
                     <>
@@ -197,9 +192,7 @@ export function QuestionForm() {
           </Form>
         </Card>
       </div>
-
       <div className="space-y-6">
-        <MinimumFeeInfo minimumFee={1} userReputation={1} />
         <QuestionGuidelines />
       </div>
     </div>
