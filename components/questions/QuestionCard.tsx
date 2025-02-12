@@ -12,6 +12,7 @@ import { Clock, User } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
 import { QuestionStats } from './QuestionStats';
+import CustomAvatar from '../users/CustomAvatar';
 
 interface QuestionCardProps {
   question: {
@@ -74,7 +75,8 @@ export function QuestionCard({ question }: QuestionCardProps) {
 
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <User className="h-4 w-4" />
+              {/* <User className="h-4 w-4" /> */}
+              <CustomAvatar address={question.author} size={28} />
               <Link
                 href={`/users/${question.author}`}
                 className="hover:text-foreground transition-colors duration-200"

@@ -1,7 +1,9 @@
 'use client';
 
+import CustomAvatar from '@/components/users/CustomAvatar';
 import walletConfig, { network } from '@/configs/WalletConfig';
 import {
+  AvatarComponent,
   RainbowKitProvider,
   darkTheme,
   lightTheme,
@@ -9,7 +11,7 @@ import {
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
-import { WagmiProvider } from 'wagmi';
+import { useAccount, WagmiProvider } from 'wagmi';
 
 const queryClient = new QueryClient();
 
@@ -54,6 +56,7 @@ export default function ContextProvider({ children }: { children: Props }) {
           initialChain={network}
           showRecentTransactions={true}
           theme={rainbowKitTheme}
+          avatar={CustomAvatar}
           locale="en-US"
         >
           {mounted && children}

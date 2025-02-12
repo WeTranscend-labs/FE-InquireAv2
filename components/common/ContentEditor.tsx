@@ -56,7 +56,7 @@ const ContentEditor = ({ initialValue, onChange }: Props) => {
 
     editor.addShortcut('ctrl+alt+p', 'Preview content', handlePreviewClick);
 
-    editor.addShortcut('ctrl+shift+c', 'Insert Code Sample', () => {
+    editor.addShortcut('ctrl+alt+c', 'Insert Code Sample', () => {
       editor.execCommand('codesample');
     });
   };
