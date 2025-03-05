@@ -3,6 +3,7 @@
 import { Card } from '@/components/ui/card';
 import { Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Progress } from '../ui/progress';
 
 interface AutoSelectTimerProps {
   deadline: string;
@@ -45,6 +46,8 @@ export function AutoSelectTimer({
     return () => clearInterval(timer);
   }, [deadline, onDeadlineReached]);
 
+  console.log(progress);
+
   return (
     <Card className="p-4 space-y-2">
       <div className="flex items-center gap-2 text-sm">
@@ -52,7 +55,7 @@ export function AutoSelectTimer({
         <span className="font-medium">Auto-select deadline</span>
       </div>
       <div className="flex items-center gap-4">
-        {/* <Progress value={progress} max={100} className="flex-1" /> */}
+        <Progress value={progress} max={100} className="flex-1" />
         <span className="text-sm font-medium">{timeLeft}</span>
       </div>
       <p className="text-xs text-muted-foreground">

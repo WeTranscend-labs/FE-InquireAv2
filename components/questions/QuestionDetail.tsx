@@ -20,7 +20,7 @@ export default function QuestionDetail({
   answersCount,
 }: QuestionDetailProps) {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl w-full mx-auto ">
       <Card className="p-8 shadow-lg border-t-4 border-t-primary">
         <div className="space-y-8">
           {/* Question Header */}
@@ -59,7 +59,7 @@ export default function QuestionDetail({
             }
           />
 
-          <Separator />
+          {/* <Separator /> */}
 
           <QuestionGuidelines />
         </div>
