@@ -29,7 +29,7 @@ export function QuestionGuidelines() {
       <Alert className="bg-primary/10 border-primary/30 shadow-md rounded-xl p-4">
         <div className="flex items-start gap-3">
           <div className="rounded-full">
-            <CheckCircle2 className="h-6 w-6 text-white" />
+            <CheckCircle2 className="h-6 w-6 text-foreground" />
           </div>
           <div>
             <AlertTitle className="text-primary-700 font-semibold">
