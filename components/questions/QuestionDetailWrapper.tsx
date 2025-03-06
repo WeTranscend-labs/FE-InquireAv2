@@ -1,6 +1,6 @@
 'use client';
 
-import { AutoSelectTimer } from '@/components/features/AutoSelectTimer';
+// import { AutoSelectTimer } from '@/components/features/AutoSelectTimer';
 import { ProportionalRewardInfo } from '@/components/features/ProportionalRewardInfo';
 import { ReputationBadge } from '@/components/features/ReputationBadge';
 import { Card } from '@/components/ui/card';
@@ -14,6 +14,15 @@ import { formatEther } from 'viem';
 import { AnswerEditor } from './AnswerEditor';
 import AnswersList from './AnswersList';
 import QuestionDetail from './QuestionDetail';
+import dynamic from 'next/dynamic';
+
+const AutoSelectTimer = dynamic(
+  () =>
+    import('@/components/features/AutoSelectTimer').then(
+      (mod) => mod.AutoSelectTimer
+    ),
+  { ssr: false }
+);
 
 interface QuestionDetailWrapperProps {
   question: ContractQuestion;
@@ -83,8 +92,6 @@ export default function QuestionDetailWrapper({
     }
   };
 
-  console.log(answers);
-
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="grid grid-cols-[1fr,300px] gap-6">
@@ -93,7 +100,9 @@ export default function QuestionDetailWrapper({
         <div className="space-y-4">
           <Card className="p-4 bg-primary/5">
             <AutoSelectTimer
-              deadline={new Date(Number(question.deadline) * 1000) + ''}
+              deadline={new Date(
+                Number(question.deadline) * 1000
+              ).toISOString()}
               onDeadlineReached={() => console.log('Deadline reached')}
             />
           </Card>

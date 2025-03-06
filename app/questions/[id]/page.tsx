@@ -10,17 +10,6 @@ export default function QuestionPage({ params }: { params: { id: string } }) {
 
   const { question, error, isLoading } = useGetQuestionById(questionId);
 
-  if (error) {
-    return (
-      <div className="text-center py-12">
-        <h1 className="text-2xl font-bold mb-4">Error Loading Question</h1>
-        <p className="text-muted-foreground">
-          {error.message || 'An unexpected error occurred'}
-        </p>
-      </div>
-    );
-  }
-
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -32,10 +21,21 @@ export default function QuestionPage({ params }: { params: { id: string } }) {
     );
   }
 
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <h1 className="text-2xl font-bold mb-4">Error Loading Question</h1>
+        <p className="text-muted-foreground">
+          {error.message || 'An unexpected error occurred'}
+        </p>
+      </div>
+    );
+  }
+
   if (!question) {
     return (
       <div className="text-center py-12">
-        <h1 className="text-2xl font-bold mb-4">Question not found</h1>
+        <h1 className="text-2xl font-bold mb-4">Question Not Found</h1>
         <p className="text-muted-foreground">
           The question you're looking for doesn't exist or has been removed.
         </p>
@@ -43,13 +43,9 @@ export default function QuestionPage({ params }: { params: { id: string } }) {
     );
   }
 
-  // Render chi tiết câu hỏi
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <QuestionDetailWrapper
-        question={question}
-        // answers={answers}
-      />
+      <QuestionDetailWrapper question={question} />
     </Suspense>
   );
 }

@@ -28,12 +28,14 @@ export function QuestionGuidelines() {
 
       <Alert className="bg-primary/10 border-primary/30 shadow-md rounded-xl p-4">
         <div className="flex items-start gap-3">
-          <CheckCircle2 className="h-5 w-5 text-primary mt-0.5" />
+          <div className="rounded-full">
+            <CheckCircle2 className="h-6 w-6 text-white" />
+          </div>
           <div>
             <AlertTitle className="text-primary-700 font-semibold">
               Answer Guidelines
             </AlertTitle>
-            <AlertDescription className="mt-2 text-sm text-primary-800">
+            <AlertDescription className="mt-2 text-sm text-primary-800 line-clamp-2">
               Provide detailed explanations with code examples and thorough
               security considerations. Include references to trusted resources
               and tools where applicable.
