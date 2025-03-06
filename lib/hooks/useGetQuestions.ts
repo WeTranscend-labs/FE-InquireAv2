@@ -41,6 +41,8 @@ export function useGetQuestions(initialPageSize = 10) {
     },
   });
 
+  console.log(contractData);
+
   const processContractData = () => {
     if (!contractData || !Array.isArray(contractData)) {
       return {

@@ -11,22 +11,22 @@ interface AnswerContentProps {
 
 export function AnswerContent({ content, className = '' }: AnswerContentProps) {
   const [htmlContent, setHtmlContent] = useState('');
-  const { theme } = useTheme(); // Lấy theme hiện tại
+  const { theme } = useTheme();
 
   useEffect(() => {
     const renderContent = async () => {
       const rendered = await markdownToHtml(content);
+      console.log('Rendered HTML:', rendered); // Debug
       setHtmlContent(rendered);
     };
     renderContent();
   }, [content]);
 
-  // Tạo className tùy theo theme
   const contentClass = theme === 'dark' ? 'dark:prose-invert' : 'prose';
 
   return (
     <div
-      className={`max-w-none ${contentClass} ${className}`}
+      className={`max-w-none ${contentClass} break-all whitespace-pre-wrap ${className}`}
       dangerouslySetInnerHTML={{ __html: htmlContent }}
     />
   );

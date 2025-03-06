@@ -53,7 +53,7 @@ export function QuestionForm() {
     if (isConfirmed) {
       toast({
         title: 'Question Submitted',
-        description: 'Your question has been successfully added.',
+        description: 'Your question has been successfully created.',
         variant: 'default',
         className: 'toast-success',
       });
@@ -136,7 +136,7 @@ export function QuestionForm() {
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Waiting for signature...
               </>
-            ) : isConfirming ? (
+            ) : isConfirmed ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Confirming transaction...
@@ -157,7 +157,13 @@ export function QuestionForm() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <span className="ml-2">
-              {submitError || contractError?.message || 'An error occurred'}
+              {(
+                submitError ||
+                contractError?.message ||
+                'An error occurred'
+              ).slice(0, 100)}
+              {((submitError || contractError?.message) ?? '').length > 100 &&
+                '...'}
             </span>
           </Alert>
         )}
