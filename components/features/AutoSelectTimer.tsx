@@ -15,24 +15,25 @@ export function AutoSelectTimer({
   onDeadlineReached,
 }: AutoSelectTimerProps) {
   const [timeLeft, setTimeLeft] = useState('');
-  const [progress, setProgress] = useState(100);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date().getTime();
       const deadlineTime = new Date(deadline).getTime();
       const distance = deadlineTime - now;
-      const totalDuration = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-      const elapsed = totalDuration - distance;
+      const totalDuration = 7 * 24 * 60 * 60 * 1000; // 7 ngày (millisecond)
 
-      if (distance < 0) {
+      // Nếu deadline đã qua
+      if (distance <= 0) {
         clearInterval(timer);
         setTimeLeft('Time expired');
-        setProgress(1);
+        setProgress(100);
         onDeadlineReached?.();
         return;
       }
 
+      // Tính toán thời gian còn lại
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor(
         (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -40,13 +41,20 @@ export function AutoSelectTimer({
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
 
       setTimeLeft(`${days}d ${hours}h ${minutes}m`);
-      setProgress((distance / totalDuration) * 100);
+
+      // ✅ Tính % progress, đảm bảo nằm trong khoảng [0, 100]
+      const newProgress = Math.min(
+        100,
+        ((totalDuration - distance) / totalDuration) * 100
+      );
+      setProgress(newProgress);
     }, 1000);
 
     return () => clearInterval(timer);
   }, [deadline, onDeadlineReached]);
 
-  console.log(progress);
+  console.log('Deadline:', deadline);
+  console.log('Progress:', progress);
 
   return (
     <Card className="p-4 space-y-2">

@@ -63,7 +63,7 @@ export function AnswerEditor({
       <div className="bg-muted/30 px-6 py-4 border-b border-border/50">
         <h3 className="text-xl font-semibold flex items-center gap-2">
           Your Answer
-          <div className="text-xs font-normal text-muted-foreground bg-background/80 px-2 py-0.5 rounded-full">
+          <div className="text-xs font-normal text-muted-foreground bg-background/80 px-2 py-0.5 rounded-full ml-auto">
             Question #{questionId}
           </div>
         </h3>
@@ -80,7 +80,7 @@ export function AnswerEditor({
       )}
 
       <div className="p-6 space-y-4">
-        <div className="border border-border/50 rounded-md overflow-hidden transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/30">
+        <div className="rounded-md overflow-hidden transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/30">
           <ContentEditor
             initialValue={content}
             onChange={(newContent) => setContent(newContent)}
