@@ -36,6 +36,65 @@ export const contractABI = [
     type: 'event',
   },
   {
+    inputs: [
+      {
+        internalType: 'string',
+        name: '_questionText',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: '_questionContent',
+        type: 'string',
+      },
+      {
+        internalType: 'string',
+        name: '_category',
+        type: 'string',
+      },
+      {
+        internalType: 'enum InquireType.DeadlinePeriod',
+        name: '_deadlinePeriod',
+        type: 'uint8',
+      },
+    ],
+    name: 'askQuestion',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'questionId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'answerId',
+        type: 'uint256',
+      },
+    ],
+    name: 'closeQuestion',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'questionId',
+        type: 'uint256',
+      },
+    ],
+    name: 'distributeRewards',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -92,6 +151,42 @@ export const contractABI = [
     type: 'event',
   },
   {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'questionId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'answerId',
+        type: 'uint256',
+      },
+    ],
+    name: 'selectBestAnswer',
+    outputs: [],
+    stateMutability: 'payable',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'questionId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'string',
+        name: '_answerText',
+        type: 'string',
+      },
+    ],
+    name: 'submitAnswer',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -117,42 +212,28 @@ export const contractABI = [
     type: 'event',
   },
   {
-    inputs: [],
-    name: 'MONTH',
-    outputs: [
+    inputs: [
       {
         internalType: 'uint256',
-        name: '',
+        name: 'questionId',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'answerId',
         type: 'uint256',
       },
     ],
-    stateMutability: 'view',
+    name: 'voteForAnswer',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [],
-    name: 'TWO_WEEKS',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'WEEK',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -218,34 +299,6 @@ export const contractABI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'string',
-        name: '_questionText',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_questionContent',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_category',
-        type: 'string',
-      },
-      {
-        internalType: 'enum InquireA.DeadlinePeriod',
-        name: '_deadlinePeriod',
-        type: 'uint8',
-      },
-    ],
-    name: 'askQuestion',
-    outputs: [],
-    stateMutability: 'payable',
-    type: 'function',
-  },
-  {
     inputs: [],
     name: 'balance',
     outputs: [
@@ -275,37 +328,6 @@ export const contractABI = [
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'questionId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'answerId',
-        type: 'uint256',
-      },
-    ],
-    name: 'closeQuestion',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'questionId',
-        type: 'uint256',
-      },
-    ],
-    name: 'distributeRewards',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
   {
@@ -356,7 +378,7 @@ export const contractABI = [
             type: 'uint256',
           },
         ],
-        internalType: 'struct InquireA.Answer',
+        internalType: 'struct InquireType.Answer',
         name: '',
         type: 'tuple',
       },
@@ -417,7 +439,7 @@ export const contractABI = [
             type: 'uint256',
           },
         ],
-        internalType: 'struct InquireA.Answer[]',
+        internalType: 'struct InquireType.Answer[]',
         name: 'answersList',
         type: 'tuple[]',
       },
@@ -498,7 +520,7 @@ export const contractABI = [
             type: 'uint256',
           },
         ],
-        internalType: 'struct InquireA.Question',
+        internalType: 'struct InquireType.Question',
         name: '',
         type: 'tuple',
       },
@@ -574,7 +596,7 @@ export const contractABI = [
             type: 'uint256',
           },
         ],
-        internalType: 'struct InquireA.Question[]',
+        internalType: 'struct InquireType.Question[]',
         name: 'questionsList',
         type: 'tuple[]',
       },
@@ -606,6 +628,66 @@ export const contractABI = [
         internalType: 'uint256[]',
         name: '',
         type: 'uint256[]',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'address',
+        name: 'user',
+        type: 'address',
+      },
+    ],
+    name: 'getUserReputation',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: '',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
+    type: 'function',
+  },
+  {
+    inputs: [
+      {
+        internalType: 'uint256',
+        name: 'pageIndex',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'pageSize',
+        type: 'uint256',
+      },
+    ],
+    name: 'getUsers',
+    outputs: [
+      {
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'reputation',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct InquireType.User[]',
+        name: 'usersList',
+        type: 'tuple[]',
+      },
+      {
+        internalType: 'uint256',
+        name: 'totalUsers',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'totalPages',
+        type: 'uint256',
       },
     ],
     stateMutability: 'view',
@@ -705,36 +787,38 @@ export const contractABI = [
     inputs: [
       {
         internalType: 'uint256',
-        name: 'questionId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'answerId',
+        name: '',
         type: 'uint256',
       },
     ],
-    name: 'selectBestAnswer',
-    outputs: [],
-    stateMutability: 'payable',
+    name: 'userAddresses',
+    outputs: [
+      {
+        internalType: 'address',
+        name: '',
+        type: 'address',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
       {
-        internalType: 'uint256',
-        name: 'questionId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'string',
-        name: '_answerText',
-        type: 'string',
+        internalType: 'address',
+        name: '',
+        type: 'address',
       },
     ],
-    name: 'submitAnswer',
-    outputs: [],
-    stateMutability: 'nonpayable',
+    name: 'users',
+    outputs: [
+      {
+        internalType: 'uint256',
+        name: 'reputation',
+        type: 'uint256',
+      },
+    ],
+    stateMutability: 'view',
     type: 'function',
   },
   {
@@ -748,31 +832,6 @@ export const contractABI = [
       },
     ],
     stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'questionId',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'answerId',
-        type: 'uint256',
-      },
-    ],
-    name: 'voteForAnswer',
-    outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
-  },
-  {
-    inputs: [],
-    name: 'withdraw',
-    outputs: [],
-    stateMutability: 'nonpayable',
     type: 'function',
   },
 ];

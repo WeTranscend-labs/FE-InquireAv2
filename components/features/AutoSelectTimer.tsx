@@ -42,7 +42,6 @@ export function AutoSelectTimer({
 
       setTimeLeft(`${days}d ${hours}h ${minutes}m`);
 
-      // ✅ Tính % progress, đảm bảo nằm trong khoảng [0, 100]
       const newProgress = Math.min(
         100,
         ((totalDuration - distance) / totalDuration) * 100
@@ -53,9 +52,6 @@ export function AutoSelectTimer({
     return () => clearInterval(timer);
   }, [deadline, onDeadlineReached]);
 
-  console.log('Deadline:', deadline);
-  console.log('Progress:', progress);
-
   return (
     <Card className="p-4 space-y-2">
       <div className="flex items-center gap-2 text-sm">
@@ -63,7 +59,7 @@ export function AutoSelectTimer({
         <span className="font-medium">Auto-select deadline</span>
       </div>
       <div className="flex items-center gap-4">
-        <Progress value={progress} max={100} className="flex-1" />
+        <Progress value={progress ?? 0} max={100} className="flex-1" />
         <span className="text-sm font-medium">{timeLeft}</span>
       </div>
       <p className="text-xs text-muted-foreground">

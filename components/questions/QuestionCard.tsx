@@ -8,12 +8,12 @@ import {
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
 import { formatDistanceToNow } from 'date-fns';
-import { Clock, User } from 'lucide-react';
+import { Clock } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '../ui/button';
-import { QuestionStats } from './QuestionStats';
 import CustomAvatar from '../users/CustomAvatar';
 import { QuestionContent } from './QuestionContent';
+import { QuestionStats } from './QuestionStats';
 
 interface QuestionCardProps {
   question: {
