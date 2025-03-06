@@ -7,7 +7,7 @@ import { HeroHighlight } from '@/components/ui/hero-highlight'
 
 export function HowItWorks() {
   return (
-    <HeroHighlight containerClassName="py-24 bg-white dark:bg-black transition-colors duration-300">
+    <HeroHighlight containerClassName="py-24 bg-white  transition-colors duration-300">
       <div className="container mx-auto px-6">
         {/* Header Section */}
         <motion.div
