@@ -83,8 +83,6 @@ export default function QuestionDetailWrapper({
     }
   };
 
-  console.log(answers);
-
   return (
     <div className="max-w-5xl mx-auto space-y-8">
       <div className="grid grid-cols-[1fr,300px] gap-6">

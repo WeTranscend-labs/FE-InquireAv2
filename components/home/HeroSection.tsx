@@ -5,10 +5,12 @@ import { CircleDollarSign, Lightbulb, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ParallaxBackground } from './ParallaxBackground';
+import { ShimmerButton } from '../magicui/shimmer-button';
+import { SparklesText } from '../magicui/sparkles-text';
 
 export function HeroSection() {
   return (
-    <ParallaxBackground className="py-24 rounded-3xl overflow-hidden bg-zinc-950 border border-zinc-800">
+    <ParallaxBackground className="py-24 rounded-3xl overflow-hidden border border-border">
       <div className="container mx-auto px-6">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
@@ -16,28 +18,34 @@ export function HeroSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center rounded-full px-6 py-2 border border-zinc-800 mb-8 bg-zinc-900/50 backdrop-blur-sm">
-              <CircleDollarSign className="h-4 w-4 text-white mr-2" />
-              <span className="text-sm font-medium text-zinc-300">
+            {/* Banner Thông Báo */}
+            <div className="inline-flex items-center rounded-full px-6 py-2 border border-border mb-8 bg-secondary/50 backdrop-blur-sm">
+              <CircleDollarSign className="h-4 w-4 text-primary mr-2" />
+              <span className="text-sm font-medium text-foreground">
                 Earn tokens by helping others
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold tracking-tight mb-6 text-white">
-              Where Knowledge Meets Rewards
+            {/* Tiêu đề & Mô tả */}
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-foreground">
+              <SparklesText
+                text=" Where Knowledge Meets Rewards"
+                sparklesCount={10}
+              />
             </h1>
-
-            <p className="text-xl text-zinc-400 mb-8 leading-relaxed">
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
               Ask questions with token bounties, provide valuable answers, and
               earn rewards. Join InquireA's blockchain-powered Q&A community
               today.
             </p>
 
+            {/* Nút CTA */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">
               <Button
                 size="lg"
-                className="min-w-[200px] bg-white text-black hover:bg-zinc-200 transition-colors relative z-10"
+                className="min-w-[200px] animate-pulse"
                 asChild
+                variant="default"
               >
                 <Link href="/questions/ask">
                   <Lightbulb className="mr-2 h-4 w-4" />
@@ -48,7 +56,7 @@ export function HeroSection() {
               <Button
                 size="lg"
                 variant="outline"
-                className="min-w-[200px] group border-zinc-700 text-zinc-300 hover:bg-zinc-800 hover:text-white relative z-10"
+                className="min-w-[200px] group border-border text-foreground hover:bg-accent hover:text-primary relative z-10"
                 asChild
               >
                 <Link href="/questions">
@@ -58,16 +66,19 @@ export function HeroSection() {
               </Button>
             </div>
 
+            {/* Thống kê */}
             <div className="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto text-center">
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="space-y-2 p-4 rounded-lg bg-zinc-900/50 backdrop-blur-sm border border-zinc-800"
+                  className="space-y-2 p-4 rounded-lg bg-secondary/50 backdrop-blur-sm border border-border"
                 >
-                  <div className="text-3xl font-bold text-white">
+                  <div className="text-3xl font-bold text-primary">
                     {stat.value}
                   </div>
-                  <div className="text-sm text-zinc-400">{stat.label}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {stat.label}
+                  </div>
                 </div>
               ))}
             </div>

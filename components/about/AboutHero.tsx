@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { CircleDollarSign } from 'lucide-react';
 import { SparklesText } from '../magicui/sparkles-text';
+import { Button } from '../ui/button';
 
 export function AboutHero() {
   return (
@@ -18,12 +19,15 @@ export function AboutHero() {
           className="max-w-4xl mx-auto text-center"
         >
           {/* Icon + Badge */}
-          <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-full mb-8 shadow-md transition-transform transform hover:scale-105">
+          <Button
+            className="inline-flex items-center justify-center py-2 px-4 rounded-full mb-8 transition-transform transform hover:scale-105 "
+            variant="outline"
+          >
             <CircleDollarSign className="h-7 w-7 text-primary mr-2 animate-pulse" />
             <span className="font-medium text-primary/90 text-lg">
               Empowering Developers
             </span>
-          </div>
+          </Button>
 
           {/* Main Title */}
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-foreground">
