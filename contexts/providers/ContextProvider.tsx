@@ -3,15 +3,14 @@
 import CustomAvatar from '@/components/users/CustomAvatar';
 import walletConfig, { network } from '@/configs/WalletConfig';
 import {
-  AvatarComponent,
-  RainbowKitProvider,
   darkTheme,
   lightTheme,
+  RainbowKitProvider,
 } from '@rainbow-me/rainbowkit';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useTheme } from 'next-themes';
 import React, { useEffect, useState } from 'react';
-import { useAccount, WagmiProvider } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
 
 const queryClient = new QueryClient();
 

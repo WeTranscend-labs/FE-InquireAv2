@@ -1,7 +1,12 @@
 'use client';
 
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import {
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useAccount,
+} from 'wagmi';
 import { contractABI as abi } from '../contracts/contractABI';
+import { network } from '@/configs/WalletConfig';
 
 export interface AskQuestionArgs {
   questionText: string;
@@ -12,6 +17,7 @@ export interface AskQuestionArgs {
 }
 
 export function useAskQuestion() {
+  const { address: account } = useAccount();
   const { data: hash, error, isPending, writeContract } = useWriteContract();
 
   const askQuestion = async ({
@@ -28,6 +34,8 @@ export function useAskQuestion() {
         functionName: 'askQuestion',
         args: [questionText, questionContent, category, deadlinePeriod],
         value: rewardAmount,
+        chain: network,
+        account,
       });
     } catch (err) {
       console.error('Error asking question:', err);
