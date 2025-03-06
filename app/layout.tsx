@@ -11,6 +11,8 @@ import { Footer } from '@/components/layout/footer/Footer';
 import { Toaster } from '@/components/ui/toaster';
 import ContextProvider from '@/contexts/providers/ContextProvider';
 import { TooltipProvider } from '@radix-ui/react-tooltip';
+import { NotificationService } from '@/components/layout/toast-notification/NotificationService';
+import { HeroHighlight } from '@/components/ui/hero-highlight';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -41,13 +43,16 @@ export default function RootLayout({
             <ContextProvider>
               <div className="min-h-screen flex flex-col bg-background">
                 <MainNav />
-                <div className="flex-1 flex pt-16">
-                  {' '}
-                  <CollapsibleSidebar />
-                  <main className="flex-1 container mx-auto px-4 py-6">
-                    {children}
-                  </main>
-                </div>
+                <HeroHighlight containerClassName="min-h-screen">
+                  <div className="flex-1 flex pt-16">
+                    {' '}
+                    <CollapsibleSidebar />
+                    <main className="flex-1 container mx-auto px-4 py-6">
+                      {children}
+                    </main>
+                  </div>
+                </HeroHighlight>
+                <NotificationService />
                 <Footer />
               </div>
               <Toaster />
