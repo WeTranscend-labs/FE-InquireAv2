@@ -63,7 +63,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
 
               <QuestionContent
                 content={question.content}
-                className="line-clamp-3 font-medium text-muted-foreground text-sm "
+                className="line-clamp-3 font-medium text-muted-foreground text-sm"
               />
             </div>
 
