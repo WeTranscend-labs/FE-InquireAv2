@@ -5,13 +5,12 @@ import { QuestionResponse } from './dto/question/question.response';
 
 const BASE_URL = 'http://localhost:8080/api';
 
-// Hàm gọi API
 export async function createQuestion(
   data: CreateQuestionData
 ): Promise<AxiosResponse<ApiResponse<QuestionResponse>>> {
   try {
     const response = await axios.post<ApiResponse<QuestionResponse>>(
-      `${BASE_URL}/questions`, // Ghép base URL với endpoint
+      `${BASE_URL}/questions`,
       data,
       {
         headers: {
@@ -22,6 +21,20 @@ export async function createQuestion(
     return response;
   } catch (error) {
     console.error('Error creating question:', error);
+    throw error;
+  }
+}
+
+export async function getQuestionById(
+  questionId: string
+): Promise<AxiosResponse<ApiResponse<QuestionResponse>>> {
+  try {
+    const response = await axios.get<ApiResponse<QuestionResponse>>(
+      `${BASE_URL}/questions/${questionId}`
+    );
+    return response;
+  } catch (error) {
+    console.error('Error fetching question:', error);
     throw error;
   }
 }
