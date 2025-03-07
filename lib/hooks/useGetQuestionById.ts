@@ -1,18 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useReadContract } from 'wagmi';
 import { contractABI } from '../contracts/contractABI';
-import { ContractQuestion } from './useGetQuestions';
+import { getQuestionById as fetchOffChainData } from '@/service/question.service';
 
+export interface ContractQuestion {
+  id: bigint;
+  asker: string;
+  questionDetailId: string;
+  rewardAmount: bigint;
+  createdAt: bigint;
+  deadline: bigint;
+  isClosed: boolean;
+  chosenAnswerId: bigint;
+}
+
+export interface MergedQuestion extends ContractQuestion {
+  questionText: string;
+  questionContent: string;
+  category: string;
+}
+
+// Kiểm tra dữ liệu trả về từ contract có hợp lệ không
 function isValidContractData(data: unknown): data is ContractQuestion {
   return (
     data !== null &&
     typeof data === 'object' &&
     'asker' in data &&
-    'questionText' in data &&
-    'questionContent' in data &&
-    'category' in data &&
+    'questionDetailId' in data &&
     'rewardAmount' in data &&
     'createdAt' in data &&
     'deadline' in data &&
@@ -25,11 +41,16 @@ export function useGetQuestionById(initialQuestionId?: bigint) {
   const [questionId, setQuestionId] = useState<bigint | undefined>(
     initialQuestionId
   );
+  const [mergedQuestion, setMergedQuestion] = useState<MergedQuestion | null>(
+    null
+  );
+  const [isFetchingOffChain, setIsFetchingOffChain] = useState(false);
 
+  // Lấy dữ liệu từ smart contract
   const {
     data: contractData,
     error,
-    isLoading,
+    isLoading: isLoadingContract,
     refetch,
   } = useReadContract({
     address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
@@ -42,38 +63,67 @@ export function useGetQuestionById(initialQuestionId?: bigint) {
     },
   });
 
-  const processedQuestion: ContractQuestion | undefined = (() => {
-    if (!contractData) return undefined;
+  // Khi có dữ liệu on-chain, gọi API để lấy dữ liệu off-chain
+  useEffect(() => {
+    const fetchOffChainDataForQuestion = async () => {
+      if (!contractData || !isValidContractData(contractData)) {
+        console.error('Invalid contract data:', contractData);
+        return;
+      }
 
-    if (!isValidContractData(contractData)) {
-      console.error('Invalid contract data', contractData);
-      return undefined;
-    }
+      setIsFetchingOffChain(true);
 
-    return {
-      id: questionId || BigInt(0),
-      asker: contractData.asker,
-      questionText: contractData.questionText,
-      questionContent: contractData.questionContent,
-      category: contractData.category,
-      rewardAmount: BigInt(contractData.rewardAmount),
-      createdAt: BigInt(contractData.createdAt),
-      deadline: BigInt(contractData.deadline),
-      isClosed: contractData.isClosed,
-      chosenAnswerId: BigInt(contractData.chosenAnswerId),
+      try {
+        // Chuyển đổi dữ liệu on-chain
+        const onChainQuestion: ContractQuestion = {
+          id: questionId || BigInt(0),
+          asker: contractData.asker,
+          questionDetailId: contractData.questionDetailId,
+          rewardAmount: BigInt(contractData.rewardAmount),
+          createdAt: BigInt(contractData.createdAt),
+          deadline: BigInt(contractData.deadline),
+          isClosed: contractData.isClosed,
+          chosenAnswerId: BigInt(contractData.chosenAnswerId),
+        };
+
+        // Gọi API lấy dữ liệu off-chain
+        const response = await fetchOffChainData(
+          onChainQuestion.questionDetailId
+        );
+        const offChainData = response.data.result;
+
+        // Kết hợp dữ liệu
+        setMergedQuestion({
+          ...onChainQuestion,
+          questionText: offChainData.questionText,
+          questionContent: offChainData.questionContent,
+          category: offChainData.category,
+        });
+      } catch (error) {
+        console.error(
+          `Failed to fetch off-chain data for question ${questionId}`,
+          error
+        );
+      } finally {
+        setIsFetchingOffChain(false);
+      }
     };
-  })();
 
-  // Function to fetch question by ID
+    if (contractData) {
+      fetchOffChainDataForQuestion();
+    }
+  }, [contractData]);
+
+  // Hàm fetch lại câu hỏi theo ID
   const fetchQuestionById = (id: bigint) => {
     setQuestionId(id);
     refetch();
   };
 
   return {
-    question: processedQuestion,
+    question: mergedQuestion,
     error,
-    isLoading,
+    isLoading: isLoadingContract || isFetchingOffChain,
     questionId,
     fetchQuestionById,
     refetch,
