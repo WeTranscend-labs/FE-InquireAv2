@@ -4,28 +4,41 @@ import { Button } from '@/components/ui/button';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import {
   ChevronDown,
+  ExternalLink,
   NetworkIcon,
   OctagonAlert,
-  PlugIcon,
-  Wallet2Icon,
+  PlugZap,
+  Wallet,
+  Copy,
+  Check,
+  Sparkles
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { useEffect } from 'react';
-import CopyClipboard from '../common/CopyClipboard';
+import { useEffect, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { Badge } from '@/components/ui/badge';
+import { Separator } from '@/components/ui/separator';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function CustomConnectButton() {
-  const { theme, systemTheme, resolvedTheme } = useTheme();
+  const { theme, resolvedTheme } = useTheme();
+  const [copied, setCopied] = useState(false);
+  const [hovering, setHovering] = useState(false);
 
   useEffect(() => {
-    // Đảm bảo RainbowKit tuân theo theme của ứng dụng
+    // Ensure RainbowKit follows the app theme
     document.documentElement.classList.toggle('light', theme === 'light');
+  }, [theme, resolvedTheme]);
 
-    console.log(theme);
-  }, [theme, systemTheme, resolvedTheme]);
-
-  // Hàm để chọn variant dựa trên theme
   function formatAddress(address: string) {
-    return `${address.slice(0, 3)}...${address.slice(-3)}`;
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  }
+
+  function copyToClipboard(text: string) {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   return (
@@ -48,6 +61,7 @@ export function CustomConnectButton() {
 
         return (
           <div
+            className="relative z-10"
             {...(!ready && {
               'aria-hidden': true,
               style: {
@@ -60,16 +74,41 @@ export function CustomConnectButton() {
             {(() => {
               if (!connected) {
                 return (
-                  <div className="flex items-center gap-2">
-                    <Button
-                      onClick={openConnectModal}
-                      variant="default"
-                      className="flex items-center justify-center"
-                    >
-                      <PlugIcon className="mr-2 h-4 w-4" />
-                      <span className="truncate">Connect Wallet</span>
-                    </Button>
-                  </div>
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          onClick={openConnectModal}
+                          variant="default"
+                          className="relative overflow-hidden group bg-gradient-to-r from-primary/90 to-primary/70 hover:from-primary hover:to-primary/80 transition-all duration-300 shadow-md hover:shadow-lg"
+                          size="sm"
+                          onMouseEnter={() => setHovering(true)}
+                          onMouseLeave={() => setHovering(false)}
+                        >
+                          <div className="absolute inset-0 bg-[url('/noise.svg')] opacity-5"></div>
+                          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 w-1/2 -skew-x-12 transform animate-shimmer"></div>
+                          <PlugZap className="mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-12" />
+                          <span className="font-medium">Connect Wallet</span>
+                          <AnimatePresence>
+                            {hovering && (
+                              <motion.div
+                                className="absolute top-0 right-0 bottom-0 left-0 pointer-events-none"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                              >
+                                <Sparkles className="absolute top-1 right-2 h-3 w-3 text-white/40 animate-pulse" />
+                                <Sparkles className="absolute bottom-1 left-2 h-2 w-2 text-white/30 animate-pulse" />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="font-medium">
+                        <p>Connect your wallet to use all features</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 );
               }
 
@@ -78,43 +117,96 @@ export function CustomConnectButton() {
                   <Button
                     onClick={openChainModal}
                     variant="destructive"
-                    className="flex items-center gap-2 px-4 py-2"
+                    size="sm"
+                    className="flex items-center gap-2 shadow-md hover:shadow-lg transition-all"
                   >
-                    <OctagonAlert className="h-4 w-4" />
-                    <span className="truncate">Wrong Network</span>
+                    <OctagonAlert className="h-4 w-4 animate-pulse" />
+                    <span className="font-medium">Wrong Network</span>
+                    <ChevronDown className="h-4 w-4 opacity-70" />
                   </Button>
                 );
               }
 
               return (
                 <div className="flex items-center">
-                  <Button
-                    onClick={openChainModal}
-                    variant="outline"
-                    className="rounded-r-none border-r-0 flex items-center gap-2"
-                  >
-                    <NetworkIcon className="h-4 w-4 text-muted-foreground" />
-                    <span className="font-medium">{chain.name}</span>
-                  </Button>
+                  <TooltipProvider delayDuration={300}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          onClick={openChainModal}
+                          variant="outline"
+                          size="sm"
+                          className="rounded-r-none border-r-0 flex items-center gap-2 bg-background/50 hover:bg-background/80 transition-colors shadow-sm"
+                        >
+                          <div className="flex items-center">
+                            {chain.iconUrl && (
+                              <div className="relative mr-1.5 w-4 h-4 overflow-hidden rounded-full shadow-sm flex-shrink-0">
+                                <img
+                                  src={chain.iconUrl}
+                                  alt={chain.name}
+                                  className="h-full w-full object-cover"
+                                />
+                              </div>
+                            )}
+                            {!chain.iconUrl && (
+                              <NetworkIcon className="h-4 w-4 mr-1.5 text-primary" />
+                            )}
+                            <span className="font-medium text-sm">{chain.name}</span>
+                          </div>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" className="font-medium">
+                        <p>Change network</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+
                   <Button
                     onClick={openAccountModal}
-                    variant="default"
-                    className="rounded-l-none flex items-center gap-2 max-w-[250px]"
+                    variant="outline"
+                    size="sm"
+                    className="rounded-l-none flex items-center gap-2 pr-3 bg-background/50 hover:bg-muted/80 transition-all group shadow-sm"
                   >
-                    <Wallet2Icon className="h-4 w-4 mr-2 text-muted-foreground" />
-                    <div className="flex flex-col items-start">
-                      <span className="text-sm font-medium truncate max-w-[150px]">
-                        {account.displayBalance}
-                      </span>
-                      <span className="text-xs text-muted-foreground flex">
-                        {formatAddress(account.address)}
-                        <CopyClipboard
-                          text={account.address}
-                          className="w-3 h-3 my-auto ml-1"
-                        />
-                      </span>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-5 w-5 ring-1 ring-primary/20 shadow-inner">
+                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/5 text-primary text-xs">
+                          {account.address.substring(2, 3).toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col items-start">
+                        <div className="flex items-center gap-1">
+                          <Badge variant="outline" className="px-1.5 py-0 text-xs font-normal bg-muted/50 shadow-inner">
+                            {formatAddress(account.address)}
+                          </Badge>
+                          <AnimatePresence mode="wait">
+                            <motion.button
+                              key={copied ? 'check' : 'copy'}
+                              initial={{ scale: 0.8, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              exit={{ scale: 0.8, opacity: 0 }}
+                              transition={{ duration: 0.15 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                copyToClipboard(account.address);
+                              }}
+                              className="text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              {copied ?
+                                <Check className="h-3.5 w-3.5 text-green-500" /> :
+                                <Copy className="h-3.5 w-3.5" />
+                              }
+                            </motion.button>
+                          </AnimatePresence>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Wallet className="h-3 w-3 text-primary" />
+                          <span className="text-xs font-medium">
+                            {account.displayBalance}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                    <ChevronDown className="ml-1 h-3.5 w-3.5 opacity-70 transition-transform duration-300 group-hover:rotate-180" />
                   </Button>
                 </div>
               );
