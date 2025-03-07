@@ -3,7 +3,12 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { CircleDollarSign, MessageSquare, Info } from 'lucide-react';
+import {
+  CircleDollarSign,
+  MessageSquare,
+  Info,
+  PlusCircle,
+} from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
 import { usePathname } from 'next/navigation';
 import { CustomConnectButton } from '../wallet/CustomConnectWallet';
@@ -134,7 +139,10 @@ export function MainNav() {
         <div className="flex items-center gap-4">
           <ModeToggle />
           <Button asChild>
-            <Link href="/questions/ask">Ask Question</Link>
+            <Link href="/questions/ask">
+              <PlusCircle className="h-4 w-4 mr-2" />
+              Ask Question
+            </Link>
           </Button>
 
           <CustomConnectButton />

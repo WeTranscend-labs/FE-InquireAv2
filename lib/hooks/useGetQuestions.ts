@@ -1,12 +1,8 @@
 'use client';
 import { useState } from 'react';
-import {
-  useReadContract,
-  UseReadContractParameters,
-  UseReadContractReturnType,
-} from 'wagmi';
-import { contractABI } from '../contracts/contractABI';
 import { Address } from 'viem';
+import { useReadContract } from 'wagmi';
+import { contractABI } from '../contracts/contractABI';
 
 export interface ContractQuestion {
   id: bigint;
@@ -37,11 +33,9 @@ export function useGetQuestions(initialPageSize = 10) {
     args: [page, pageSize],
     query: {
       enabled: true,
-      staleTime: 1000 * 60 * 5,
+      staleTime: 10000 * 60 * 5,
     },
   });
-
-  console.log(contractData);
 
   const processContractData = () => {
     if (!contractData || !Array.isArray(contractData)) {

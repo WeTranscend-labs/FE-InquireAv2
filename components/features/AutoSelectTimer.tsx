@@ -3,7 +3,7 @@
 import { Card } from '@/components/ui/card';
 import { Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Progress } from '../ui/progress';
+import { ProgressBar } from '../ui/progress';
 
 interface AutoSelectTimerProps {
   deadline: string;
@@ -18,36 +18,57 @@ export function AutoSelectTimer({
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      const now = new Date().getTime();
-      const deadlineTime = new Date(deadline).getTime();
-      const distance = deadlineTime - now;
-      const totalDuration = 7 * 24 * 60 * 60 * 1000; // 7 ngày (millisecond)
+    const deadlineTime = new Date(deadline).getTime();
+    if (isNaN(deadlineTime)) {
+      setTimeLeft('Invalid deadline');
+      return;
+    }
 
-      // Nếu deadline đã qua
+    const startTime = Date.now();
+    const totalDuration = deadlineTime - startTime;
+
+    if (totalDuration <= 0) {
+      setTimeLeft('Time expired');
+      setProgress(100);
+      onDeadlineReached?.();
+      return;
+    }
+
+    const updateTimer = () => {
+      const now = Date.now();
+      const distance = deadlineTime - now;
+
       if (distance <= 0) {
-        clearInterval(timer);
         setTimeLeft('Time expired');
         setProgress(100);
         onDeadlineReached?.();
         return;
       }
 
-      // Tính toán thời gian còn lại
+      // Format thời gian linh hoạt
       const days = Math.floor(distance / (1000 * 60 * 60 * 24));
       const hours = Math.floor(
         (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       );
       const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-      setTimeLeft(`${days}d ${hours}h ${minutes}m`);
+      if (days > 0) {
+        setTimeLeft(`${days}d ${hours}h ${minutes}m`);
+      } else if (hours > 0) {
+        setTimeLeft(`${hours}h ${minutes}m`);
+      } else if (minutes > 0) {
+        setTimeLeft(`${minutes}m ${seconds}s`);
+      } else {
+        setTimeLeft(`${seconds}s`);
+      }
 
-      const newProgress = Math.min(
-        100,
-        ((totalDuration - distance) / totalDuration) * 100
-      );
-      setProgress(newProgress);
-    }, 1000);
+      const elapsedTime = totalDuration - distance;
+      setProgress(Math.min(100, (elapsedTime / totalDuration) * 100));
+    };
+
+    updateTimer(); // Chạy ngay lần đầu
+    const timer = setInterval(updateTimer, 1000);
 
     return () => clearInterval(timer);
   }, [deadline, onDeadlineReached]);
@@ -59,8 +80,10 @@ export function AutoSelectTimer({
         <span className="font-medium">Auto-select deadline</span>
       </div>
       <div className="flex items-center gap-4">
-        <Progress value={progress ?? 0} max={100} className="flex-1" />
-        <span className="text-sm font-medium">{timeLeft}</span>
+        <ProgressBar value={progress} />
+        <span className="text-sm font-medium whitespace-nowrap">
+          {timeLeft}
+        </span>
       </div>
       <p className="text-xs text-muted-foreground">
         Best answer will be auto-selected when timer expires

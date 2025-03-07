@@ -1,28 +1,22 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
+import React from 'react';
 
-import { cn } from "@/lib/utils"
+interface ProgressBarProps {
+  value: number; // Giá trị phần trăm (0 - 100)
+}
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
->(({ className, value, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative h-4 w-full overflow-hidden rounded-full bg-secondary",
-      className
-    )}
-    {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 bg-primary transition-all"
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
-))
-Progress.displayName = ProgressPrimitive.Root.displayName
+export function ProgressBar({ value }: ProgressBarProps) {
+  return (
+    <div className="w-full h-4 rounded-full overflow-hidden relative border-[2px] border-foreground">
+      {/* Hiệu ứng sọc nền */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle,_rgba(255,255,255,0.1)_10%,_transparent_10%)] bg-[size:10px_10px]" />
 
-export { Progress }
+      {/* Thanh Progress */}
+      <div
+        className="h-full bg-foreground transition-all duration-500 ease-in-out"
+        style={{ width: `${Math.max(1, Math.min(100, value))}%` }}
+      />
+    </div>
+  );
+}
