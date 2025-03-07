@@ -641,12 +641,34 @@ export const contractABI = [
         type: 'address',
       },
     ],
-    name: 'getUserReputation',
+    name: 'getUser',
     outputs: [
       {
-        internalType: 'uint256',
+        components: [
+          {
+            internalType: 'uint256',
+            name: 'reputation',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'answerCount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'questionCount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'bestSolutionCount',
+            type: 'uint256',
+          },
+        ],
+        internalType: 'struct InquireType.User',
         name: '',
-        type: 'uint256',
+        type: 'tuple',
       },
     ],
     stateMutability: 'view',
@@ -672,6 +694,21 @@ export const contractABI = [
           {
             internalType: 'uint256',
             name: 'reputation',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'answerCount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'questionCount',
+            type: 'uint256',
+          },
+          {
+            internalType: 'uint256',
+            name: 'bestSolutionCount',
             type: 'uint256',
           },
         ],
@@ -815,6 +852,21 @@ export const contractABI = [
       {
         internalType: 'uint256',
         name: 'reputation',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'answerCount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'questionCount',
+        type: 'uint256',
+      },
+      {
+        internalType: 'uint256',
+        name: 'bestSolutionCount',
         type: 'uint256',
       },
     ],
