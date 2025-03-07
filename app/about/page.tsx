@@ -4,6 +4,7 @@ import { TeamSection } from '@/components/about/TeamSection'
 import { TechnologyStack } from '@/components/about/TechnologyStack'
 import { CommunityValues } from '@/components/about/CommunityValues'
 import { ContactSection } from '@/components/about/ContactSection'
+import { FeaturedProjects } from '@/components/home/FeaturedProjects'
 
 export default function AboutPage() {
   return (
@@ -12,7 +13,7 @@ export default function AboutPage() {
       <OurMission />
       <CommunityValues />
       <TeamSection />
-      <TechnologyStack />
+      <FeaturedProjects />
       <ContactSection />
     </div>
   )
