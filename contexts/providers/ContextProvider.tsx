@@ -21,9 +21,11 @@ export default function ContextProvider({ children }: { children: Props }) {
   const { theme } = useTheme();
   const [rainbowKitTheme, setRainbowKitTheme] = useState(
     darkTheme({
-      accentColor: '#ff8800',
+      accentColor: '#1d1d1d', // Indigo accent
       accentColorForeground: 'white',
-      borderRadius: 'none',
+      borderRadius: 'medium',
+      fontStack: 'system',
+      overlayBlur: 'small',
     })
   );
 
@@ -32,20 +34,28 @@ export default function ContextProvider({ children }: { children: Props }) {
   }, []);
 
   useEffect(() => {
-    const newTheme =
-      theme === 'dark'
-        ? darkTheme({
-            accentColor: '#ff8800',
-            accentColorForeground: 'white',
-            borderRadius: 'none',
-          })
-        : lightTheme({
-            accentColor: '#ff8800',
-            accentColorForeground: 'white',
-            borderRadius: 'none',
-          });
+    const themeConfig = {
+      dark: {
+        accentColor: '#1d1d1d', // Indigo accent for dark mode
+        accentColorForeground: 'white',
+        borderRadius: 'medium',
+        fontStack: 'system',
+        overlayBlur: 'small',
+        mode: 'dark' as const,
+      },
+      light: {
+        accentColor: '#4f46e5', // Slightly darker indigo for light mode
+        accentColorForeground: 'white',
+        borderRadius: 'medium',
+        fontStack: 'system',
+        overlayBlur: 'small',
+        mode: 'light' as const,
+      },
+    };
 
-    setRainbowKitTheme(newTheme);
+
+
+
   }, [theme]);
 
   return (
@@ -57,6 +67,7 @@ export default function ContextProvider({ children }: { children: Props }) {
           theme={rainbowKitTheme}
           avatar={CustomAvatar}
           locale="en-US"
+          coolMode // Adds confetti animation when connecting
         >
           {mounted && children}
         </RainbowKitProvider>
