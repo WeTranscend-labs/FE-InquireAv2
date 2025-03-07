@@ -26,11 +26,13 @@ interface Question {
 }
 
 interface Answer {
-  responder: address;
+  responder: Address;
   answerText: string;
-  upvotes: uint256;
-  rewardAmount: uint256;
-  createdAt: uint256;
+  upvotes: bigint;
+  rewardAmount: bigint;
+  createdAt: bigint;
+  questionId: bigint;
+  parentAnswerId: bigint;
 }
 
 interface PaginationParams {
@@ -45,8 +47,9 @@ interface AskQuestionParams {
 }
 
 interface SubmitAnswerParams {
-  questionId: uint256;
+  questionId: bigint;
   answerText: string;
+  parentAnswerId: bigint;
 }
 
 interface VoteParams {

@@ -9,9 +9,11 @@ import { createAnswer } from '@/service/answer.service';
 import { network } from '@/configs/WalletConfig';
 import { useEffect } from 'react';
 
+// Cập nhật interface với parentAnswerId
 interface SubmitAnswerArgs {
   questionId: bigint;
   answerText: string;
+  parentAnswerId: bigint; // Thêm trường này
 }
 
 export function useAnswer() {
@@ -29,7 +31,11 @@ export function useAnswer() {
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
     useWaitForTransactionReceipt({ hash });
 
-  const submitAnswer = async ({ questionId, answerText }: SubmitAnswerArgs) => {
+  const submitAnswer = async ({
+    questionId,
+    answerText,
+    parentAnswerId,
+  }: SubmitAnswerArgs) => {
     try {
       if (!answerText || !answerText.trim()) {
         throw new Error('Answer text cannot be empty');
@@ -53,7 +59,7 @@ export function useAnswer() {
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
         functionName: 'submitAnswer',
-        args: [questionId, answerDetailId],
+        args: [questionId, answerDetailId, parentAnswerId], // Thêm parentAnswerId vào args
         account: account,
         chain: network,
       });

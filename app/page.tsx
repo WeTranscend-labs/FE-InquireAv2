@@ -35,7 +35,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="space-y-24 pb-24">
+    <div className="space-y-1 pb-24">
       <WelcomeBanner />
 
       <ScrollReveal>

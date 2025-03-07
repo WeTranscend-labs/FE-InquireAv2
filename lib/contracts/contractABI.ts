@@ -163,6 +163,11 @@ export const contractABI = [
 				"internalType": "string",
 				"name": "_answerDetailId",
 				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "parentAnswerId",
+				"type": "uint256"
 			}
 		],
 		"name": "submitAnswer",
@@ -244,6 +249,35 @@ export const contractABI = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "answerReplies",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
 			}
 		],
 		"name": "answers",
@@ -276,6 +310,16 @@ export const contractABI = [
 			{
 				"internalType": "uint256",
 				"name": "createdAt",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "questionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "parentAnswerId",
 				"type": "uint256"
 			}
 		],
@@ -360,6 +404,16 @@ export const contractABI = [
 						"internalType": "uint256",
 						"name": "createdAt",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "questionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "parentAnswerId",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct InquireType.Answer",
@@ -420,6 +474,16 @@ export const contractABI = [
 					{
 						"internalType": "uint256",
 						"name": "createdAt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "questionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "parentAnswerId",
 						"type": "uint256"
 					}
 				],
@@ -567,6 +631,92 @@ export const contractABI = [
 			{
 				"internalType": "uint256",
 				"name": "totalQuestions",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalPages",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "questionId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "answerId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "pageIndex",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "pageSize",
+				"type": "uint256"
+			}
+		],
+		"name": "getRepliesByAnswerId",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "responder",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "answerDetailId",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "upvotes",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "rewardAmount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "createdAt",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "questionId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "parentAnswerId",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct InquireType.Answer[]",
+				"name": "repliesList",
+				"type": "tuple[]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalReplies",
 				"type": "uint256"
 			},
 			{
