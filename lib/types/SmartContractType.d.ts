@@ -4,6 +4,13 @@ enum DeadlinePeriod {
   OneMonth,
 }
 
+export interface User {
+  reputation: bigint;
+  answerCount: bigint;
+  questionCount: bigint;
+  bestSolutionCount: bigint;
+}
+
 interface Question {
   asker: address;
   questionText: string;

@@ -20,7 +20,14 @@ import { useForm } from 'react-hook-form';
 import { QuestionFormFields } from './QuestionFormFields';
 import { QuestionGuidelines } from './QuestionGuidelines';
 import { QuestionPreview } from './QuestionPreview';
-import { useAccount, useConnect } from 'wagmi';
+import { useAccount } from 'wagmi';
+import { z } from 'zod';
+
+const updatedQuestionSchema = questionSchema.extend({
+  deadlinePeriod: z.enum(['0', '1', '2']).default('0'),
+});
+
+type UpdatedQuestionFormValues = z.infer<typeof updatedQuestionSchema>;
 
 export function QuestionForm() {
   const router = useRouter();
@@ -37,13 +44,14 @@ export function QuestionForm() {
     error: contractError,
   } = useAskQuestion();
 
-  const form = useForm<QuestionFormValues>({
-    resolver: zodResolver(questionSchema),
+  const form = useForm<UpdatedQuestionFormValues>({
+    resolver: zodResolver(updatedQuestionSchema),
     defaultValues: {
       title: '',
       content: '',
       bounty: 0.01,
       tags: [],
+      deadlinePeriod: '0',
     },
   });
 
@@ -52,17 +60,17 @@ export function QuestionForm() {
   useEffect(() => {
     if (isConfirmed) {
       toast({
-        title: 'Question Submitted',
-        description: 'Your question has been successfully created.',
+        title: 'Question Successfully Posted!',
+        description:
+          'Your question has been recorded. Waiting for final confirmation...',
         variant: 'default',
         className: 'toast-success',
       });
-
       reset();
     }
   }, [isConfirmed, reset, router, toast]);
 
-  const onSubmit = async (data: QuestionFormValues) => {
+  const onSubmit = async (data: UpdatedQuestionFormValues) => {
     if (!isConnected) {
       toast({
         title: 'Wallet Not Connected',
@@ -74,41 +82,39 @@ export function QuestionForm() {
 
     try {
       setSubmitError(null);
-
       const category = data.tags.join(', ');
       const rewardAmount = ethers.parseEther(data.bounty.toString());
+      const deadlinePeriod = parseInt(data.deadlinePeriod);
 
-      // Show initial loading toast
-      const loadingToast = toast({
-        title: 'Submitting Question',
-        description: 'Waiting for transaction approval...',
-        duration: 10000,
+      toast({
+        title: 'Processing Question',
+        description: 'Your question is being submitted...',
+        duration: 5000,
       });
 
       await askQuestion({
         questionText: data.title,
         questionContent: data.content,
         category,
-        deadlinePeriod: 0,
+        deadlinePeriod,
         rewardAmount,
       });
 
-      loadingToast.dismiss();
       toast({
-        title: 'Processing Transaction',
-        description: 'Confirming on blockchain...',
+        title: 'Transaction Pending',
+        description: 'Waiting for blockchain confirmation...',
         duration: 10000,
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-
+      const errorMessage =
+        error.message || contractError?.message || 'Failed to submit question';
       toast({
-        title: 'Submission Failed',
-        description: contractError?.message || 'Failed to submit question',
+        title: 'Error Submitting Question',
+        description: `Something went wrong: ${errorMessage}`,
         variant: 'destructive',
       });
-
-      setSubmitError('Failed to submit question. Please try again.');
+      setSubmitError(errorMessage);
     }
   };
 
@@ -134,12 +140,12 @@ export function QuestionForm() {
             {isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Waiting for signature...
+                Processing...
               </>
-            ) : isConfirmed ? (
+            ) : isConfirming ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Confirming transaction...
+                Confirming...
               </>
             ) : (
               'Submit Question'
@@ -157,37 +163,28 @@ export function QuestionForm() {
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <span className="ml-2">
-              {(
-                submitError ||
-                contractError?.message ||
-                'An error occurred'
-              ).slice(0, 100)}
-              {((submitError || contractError?.message) ?? '').length > 100 &&
-                '...'}
+              {submitError || contractError?.message || 'An error occurred'}
             </span>
           </Alert>
         )}
 
-        <div className="space-y-6">
-          <MinimumFeeInfo minimumFee={1} userReputation={1} />
-        </div>
+        <MinimumFeeInfo minimumFee={1} userReputation={1} />
 
         <Card className="p-6">
           <Form {...form}>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <QuestionFormFields />
-
               <div className="flex justify-end gap-4">
                 <Button type="submit" disabled={isPending || isConfirming}>
                   {isPending ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Waiting for signature...
+                      Processing...
                     </>
                   ) : isConfirming ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Confirming transaction...
+                      Confirming...
                     </>
                   ) : (
                     'Submit Question'
