@@ -1,7 +1,12 @@
 'use client';
 
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import {
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useAccount,
+} from 'wagmi';
 import { contractABI as abi } from '../contracts/contractABI';
+import { network } from '@/configs/WalletConfig';
 
 export interface VoteArgs {
   questionId: bigint;
@@ -11,6 +16,7 @@ export interface VoteArgs {
 export function useVoteForAnswer() {
   // Gửi giao dịch vote
   const { data: hash, error, isPending, writeContract } = useWriteContract();
+  const { address: account } = useAccount();
 
   const voteForAnswer = async ({ questionId, answerId }: VoteArgs) => {
     try {
@@ -19,6 +25,8 @@ export function useVoteForAnswer() {
         abi: abi,
         functionName: 'voteForAnswer',
         args: [questionId, answerId],
+        account: account,
+        chain: network,
       });
     } catch (err) {
       console.error('Error voting for answer:', err);
