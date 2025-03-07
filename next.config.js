@@ -15,7 +15,7 @@ const nextConfig = {
     dirs: [],
   },
   images: {
-    domains: ['images.unsplash.com', 'i.pravatar.cc'],
+    domains: ['images.unsplash.com', 'i.pravatar.cc', 'cdn.tgdd.vn', 'i.ibb.co'],
   },
 };
 

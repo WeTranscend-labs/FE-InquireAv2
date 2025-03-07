@@ -1,13 +1,15 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { useReadContract, useWatchContractEvent } from 'wagmi';
+import { useReadContract } from 'wagmi';
 import { contractABI } from '../contracts/contractABI';
+import { getAnswerById } from '@/service/answer.service';
 
 export interface ContractAnswer {
   id: bigint;
   responder: string;
-  answerText: string;
+  answerDetailId: string; // ID để fetch dữ liệu từ backend
+  answerText?: string; // Thêm answerText từ backend
   upvotes: bigint;
   rewardAmount: bigint;
   createdAt: bigint;
@@ -27,7 +29,7 @@ export function useGetAnswersByQuestionId(
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Hook đọc contract
+  // Lấy danh sách answers từ smart contract
   const {
     data: contractData,
     error: contractError,
@@ -37,78 +39,75 @@ export function useGetAnswersByQuestionId(
     abi: contractABI,
     functionName: 'getAnswersByQuestionId',
     args: questionId ? [questionId, pageIndex, pageSize] : undefined,
-    query: {
-      enabled: !!questionId,
-    },
+    query: { enabled: !!questionId },
   });
 
-  // Xử lý dữ liệu từ contract
-  const processAnswers = useCallback(
-    (
-      data: any
-    ): {
-      processedAnswers: ContractAnswer[];
-      total: number;
-      pages: number;
-    } => {
-      if (!data) return { processedAnswers: [], total: 0, pages: 0 };
+  // Fetch answerText từ backend
+  const fetchAnswerTexts = useCallback(
+    async (contractAnswers: ContractAnswer[]) => {
+      try {
+        const updatedAnswers = await Promise.all(
+          contractAnswers.map(async (answer) => {
+            try {
+              const response = await getAnswerById(answer.answerDetailId);
+              return { ...answer, answerText: response.data.result.answerText };
+            } catch (error) {
+              console.error(
+                `Failed to fetch answerText for answerDetailId: ${answer.answerDetailId}`,
+                error
+              );
+              return answer; // Trả về answer như cũ nếu lỗi
+            }
+          })
+        );
 
-      const [rawAnswers, totalAnswers, totalPages] = data as [
-        ContractAnswer[],
-        bigint,
-        bigint
-      ];
-
-      const processedAnswers: ContractAnswer[] = rawAnswers.map((answer) => ({
-        ...answer,
-        upvotes: BigInt(Number(answer.upvotes)),
-      }));
-
-      return {
-        processedAnswers,
-        total: Number(totalAnswers),
-        pages: Number(totalPages),
-      };
+        setAnswers(updatedAnswers);
+      } catch (error) {
+        console.error('Error fetching answer texts:', error);
+      }
     },
     []
   );
 
-  // Effect để polling và cập nhật answers
+  // Xử lý dữ liệu từ contract
+  const processAnswers = useCallback((data: any) => {
+    if (!data) return { processedAnswers: [], total: 0, pages: 0 };
+
+    const [rawAnswers, totalAnswers, totalPages] = data as [
+      ContractAnswer[],
+      bigint,
+      bigint
+    ];
+
+    const processedAnswers: ContractAnswer[] = rawAnswers.map((answer) => ({
+      ...answer,
+      upvotes: BigInt(Number(answer.upvotes)), // Convert to BigInt
+    }));
+
+    return {
+      processedAnswers,
+      total: Number(totalAnswers),
+      pages: Number(totalPages),
+    };
+  }, []);
+
+  // Fetch dữ liệu từ contract và backend
   useEffect(() => {
     const fetchAnswers = async () => {
       try {
         setIsLoading(true);
-
-        // Nếu không có questionId, không thực hiện
         if (!questionId) {
           setIsLoading(false);
           return;
         }
 
-        // Gọi refetch để lấy dữ liệu mới nhất
         const { data } = await refetch();
-
         if (data) {
           const { processedAnswers, total, pages } = processAnswers(data);
-
-          // Cập nhật answers mới, tránh duplicate
-          setAnswers((prevAnswers) => {
-            const uniqueNewAnswers = processedAnswers.filter(
-              (newAnswer) =>
-                !prevAnswers.some(
-                  (existingAnswer) => existingAnswer.id === newAnswer.id
-                )
-            );
-
-            return uniqueNewAnswers.length > 0
-              ? [...uniqueNewAnswers, ...prevAnswers]
-              : prevAnswers;
-          });
-
           setTotalAnswers(total);
           setTotalPages(pages);
+          await fetchAnswerTexts(processedAnswers); // Fetch answerText từ backend
         }
-
         setIsLoading(false);
       } catch (err) {
         setError(err instanceof Error ? err : new Error('Unknown error'));
@@ -116,17 +115,19 @@ export function useGetAnswersByQuestionId(
       }
     };
 
-    // Thực hiện ngay lập tức
     fetchAnswers();
-
-    // Thiết lập interval polling
     const intervalId = setInterval(fetchAnswers, pollInterval);
-
-    // Cleanup
     return () => clearInterval(intervalId);
-  }, [questionId, pageIndex, pageSize, pollInterval, refetch, processAnswers]);
+  }, [
+    questionId,
+    pageIndex,
+    pageSize,
+    pollInterval,
+    refetch,
+    processAnswers,
+    fetchAnswerTexts,
+  ]);
 
-  // Xử lý lỗi từ contract
   useEffect(() => {
     if (contractError) {
       setError(contractError);
@@ -134,7 +135,6 @@ export function useGetAnswersByQuestionId(
     }
   }, [contractError]);
 
-  // Hàm thay đổi trang
   const changePage = useCallback(
     (newPageIndex: number) => {
       if (newPageIndex > 0 && newPageIndex <= totalPages) {
@@ -144,47 +144,12 @@ export function useGetAnswersByQuestionId(
     [totalPages]
   );
 
-  // Hàm thay đổi kích thước trang
   const changePageSize = useCallback((newPageSize: number) => {
     if (newPageSize > 0) {
       setPageSize(newPageSize);
       setPageIndex(1);
     }
   }, []);
-
-  // Hàm submit answer với optimistic update
-  const submitOptimisticAnswer = useCallback(
-    async (answerText: string) => {
-      try {
-        // Tạo answer tạm thời
-        const optimisticAnswer: ContractAnswer = {
-          id: BigInt(Date.now()), // Temp ID
-          responder: 'current_user_address', // Thay bằng địa chỉ thực tế
-          answerText,
-          upvotes: BigInt(0),
-          rewardAmount: BigInt(0),
-          createdAt: BigInt(Date.now()),
-        };
-
-        // Thêm answer tạm vào state
-        setAnswers((prev) => [optimisticAnswer, ...prev]);
-
-        // Thực hiện submit answer thực tế
-        // Gọi contract method submit answer ở đây
-
-        // Sau khi submit, refetch để cập nhật
-        await refetch();
-      } catch (err) {
-        // Nếu submit thất bại, remove answer tạm
-        // setAnswers((prev) =>
-        //   prev.filter((ans) => ans.id !== optimisticAnswer.id)
-        // );
-        console.error(err);
-        throw err;
-      }
-    },
-    [refetch]
-  );
 
   return {
     answers,
@@ -196,7 +161,6 @@ export function useGetAnswersByQuestionId(
     error,
     changePage,
     changePageSize,
-    submitOptimisticAnswer,
     refetch,
   };
 }
