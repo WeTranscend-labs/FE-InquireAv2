@@ -3,9 +3,11 @@
 import { useAccount, useReadContract } from 'wagmi';
 import { contractABI } from '../contracts/contractABI';
 import { User } from '@/lib/types/SmartContractType';
+import { Address } from 'viem';
 
 // Định nghĩa kiểu dữ liệu trả về từ hàm getUser trong contract
 type UserData = {
+  userAddress: Address;
   reputation: bigint;
   answerCount: bigint;
   questionCount: bigint;
@@ -60,6 +62,7 @@ export function useGetUser() {
     }
 
     return {
+      userAddress: contractData.userAddress,
       reputation: BigInt(contractData.reputation),
       answerCount: BigInt(contractData.answerCount),
       questionCount: BigInt(contractData.questionCount),
