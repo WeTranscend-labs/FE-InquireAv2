@@ -3,8 +3,21 @@
 import { Trophy, Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import MatrixText from '@/components/kokonutui/matrix-text'
+import { useEffect, useState } from 'react'
 
 export function LeaderboardHeader() {
+  const [key, setKey] = useState(0);
+
+  // Effect to periodically trigger animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setKey(prevKey => prevKey + 1);
+    }, 5000); // Repeat every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-4 border-b">
       <div className="space-y-2">
@@ -12,9 +25,16 @@ export function LeaderboardHeader() {
           <div className="bg-primary/10 p-2 rounded-lg">
             <Trophy className="h-6 w-6 text-primary" />
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 text-transparent bg-clip-text">
-            Leaderboard
-          </h1>
+          <div className="h-16 flex items-center">
+            <MatrixText
+              key={key}
+              text="Leaderboard"
+              className="!min-h-0 !h-16 py-2 text-3xl font-extrabold"
+              letterAnimationDuration={300}
+              letterInterval={50}
+              initialDelay={100}
+            />
+          </div>
         </div>
         <p className="text-muted-foreground max-w-md">
           Recognizing our top contributors and their remarkable achievements in helping our community grow
