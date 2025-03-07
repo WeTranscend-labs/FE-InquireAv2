@@ -1,9 +1,11 @@
-import axios, { AxiosResponse } from 'axios';
-import { CreateQuestionData } from './dto/question/question.create';
-import { ApiResponse } from './dto/apiReponse';
-import { QuestionResponse } from './dto/question/question.response';
+import axios, { AxiosResponse } from "axios";
+import { CreateQuestionData } from "./dto/question/question.create";
+import { ApiResponse } from "./dto/apiReponse";
+import { QuestionResponse } from "./dto/question/question.response";
 
-export const BASE_URL = 'https://be-inquire-a.vercel.app/api';
+
+export const BASE_URL = "https://be-inquire-a.vercel.app/api";
+
 
 export async function createQuestion(
   data: CreateQuestionData
@@ -14,13 +16,13 @@ export async function createQuestion(
       data,
       {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
     return response;
   } catch (error) {
-    console.error('Error creating question:', error);
+    console.error("Error creating question:", error);
     throw error;
   }
 }
@@ -34,7 +36,7 @@ export async function getQuestionById(
     );
     return response;
   } catch (error) {
-    console.error('Error fetching question:', error);
+    console.error("Error fetching question:", error);
     throw error;
   }
 }
