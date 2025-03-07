@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { useGetUser } from '@/lib/hooks/useGetReputation';
+import { useGetUser } from '@/lib/hooks/useGetUser';
 import { cn } from '@/lib/utils';
 import {
   ChevronLeft,
@@ -38,11 +38,6 @@ const sidebarItems = [
     href: '/questions',
   },
   {
-    title: 'Tags',
-    icon: Tags,
-    href: '/tags',
-  },
-  {
     title: 'Leaderboard',
     icon: Trophy,
     href: '/leaderboard',
@@ -52,11 +47,11 @@ const sidebarItems = [
     icon: Users,
     href: '/users',
   },
-  {
-    title: 'Settings',
-    icon: Settings,
-    href: '/settings',
-  },
+  // {
+  //   title: 'Settings',
+  //   icon: Settings,
+  //   href: '/settings',
+  // },
 ];
 
 export function CollapsibleSidebar() {

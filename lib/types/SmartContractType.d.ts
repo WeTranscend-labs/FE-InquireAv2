@@ -1,3 +1,5 @@
+import { Address } from 'viem';
+
 enum DeadlinePeriod {
   OneWeek,
   TwoWeeks,
@@ -5,6 +7,7 @@ enum DeadlinePeriod {
 }
 
 export interface User {
+  userAddress: Address;
   reputation: bigint;
   answerCount: bigint;
   questionCount: bigint;
