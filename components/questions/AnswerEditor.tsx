@@ -2,7 +2,6 @@
 
 import { Alert } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { AlertCircle, Send, Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import ContentEditor from '../common/ContentEditor';
@@ -59,49 +58,31 @@ export function AnswerEditor({
   );
 
   return (
-    <Card className="p-0 overflow-hidden border border-border/50 shadow-sm transition-all duration-200 hover:shadow-md">
-      <div className="bg-muted/30 px-6 py-4 border-b border-border/50">
-        <h3 className="text-xl font-semibold flex items-center gap-2">
-          Your Answer
-          <div className="text-xs font-normal text-muted-foreground bg-background/80 px-2 py-0.5 rounded-full ml-auto">
-            Question #{questionId}
-          </div>
-        </h3>
-      </div>
-
+    <>
       {error && (
         <Alert
           variant="destructive"
-          className="m-6 mb-0 bg-destructive/10 border-destructive/20"
+          className="mb-4 bg-destructive/10 border-destructive/20"
         >
           <AlertCircle className="h-4 w-4 text-destructive" />
           <span className="ml-2 text-sm font-medium">{error}</span>
         </Alert>
       )}
 
-      <div className="p-6 space-y-4">
-        <div className="rounded-md overflow-hidden transition-all focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary/30">
-          <ContentEditor
-            initialValue={content}
-            onChange={(newContent) => setContent(newContent)}
-          />
-        </div>
+      <div className="space-y-4">
+        <ContentEditor
+          initialValue={content}
+          onChange={(newContent) => setContent(newContent)}
+          label="Your Answer"
+          description={`Question #${questionId}`}
+          minHeight={300}
+          minimumLength={minimumLength}
+          percentComplete={percentComplete}
+        />
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2">
-          <div className="flex flex-col w-full sm:w-auto">
-            <div className="w-full sm:w-48 bg-muted/30 h-2 rounded-full overflow-hidden">
-              <div
-                className={`h-full transition-all duration-300 ease-out ${
-                  percentComplete >= 100
-                    ? 'bg-green-500'
-                    : percentComplete > 50
-                    ? 'bg-yellow-500'
-                    : 'bg-red-500'
-                }`}
-                style={{ width: `${percentComplete}%` }}
-              />
-            </div>
-            <span className={`text-xs mt-1 ${getCounterColor()}`}>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-3">
+          <div>
+            <span className={`text-xs ${getCounterColor()}`}>
               {charCount} / {minimumLength} characters minimum
             </span>
           </div>
@@ -109,7 +90,7 @@ export function AnswerEditor({
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || charCount < minimumLength}
-            className="w-full sm:w-auto transition-all duration-200 relative"
+            className="w-full sm:w-auto transition-all duration-200"
             size="lg"
           >
             {isSubmitting ? (
@@ -126,6 +107,6 @@ export function AnswerEditor({
           </Button>
         </div>
       </div>
-    </Card>
+    </>
   );
 }

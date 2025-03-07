@@ -12,6 +12,7 @@ import { WelcomeBanner } from '@/components/home/WelcomeBanner';
 import { NotificationCard } from '@/components/ui/notification-card';
 import GridMotion from '@/components/home/GridMotion';
 import { Award } from 'lucide-react';
+import Faq02 from '@/components/kokonutui/faq-02';
 
 export default function Home() {
   // Sample images for the grid motion component
@@ -67,9 +68,6 @@ export default function Home() {
         <CommunityHighlights />
       </ScrollReveal>
 
-      <ScrollReveal delay={0.1}>
-        <FeaturedProjects />
-      </ScrollReveal>
 
       <div className="grid lg:grid-cols-[1fr,300px] gap-8">
         <ScrollReveal delay={0.1}>
@@ -81,10 +79,13 @@ export default function Home() {
           <TrendingTags />
         </div>
       </div>
-
+      <ScrollReveal delay={0.1}>
+        <Faq02 />
+      </ScrollReveal>
       <ScrollReveal delay={0.1}>
         <NewsletterSection />
       </ScrollReveal>
+
     </div>
   );
 }

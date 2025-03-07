@@ -128,7 +128,7 @@ export default function QuestionDetailWrapper({
       <Separator className="my-8" />
 
       {!question.isClosed && (
-        <Card className="p-6 border-destructive/20 bg-destructive/5">
+        <Card className="p-6 border bg-primary/5">
           <AnswerEditor
             questionId={question.id + ''}
             onSubmit={handleSubmitAnswer}
