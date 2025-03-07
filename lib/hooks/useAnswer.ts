@@ -1,14 +1,23 @@
-import { useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import {
+  useAccount,
+  useWaitForTransactionReceipt,
+  useWriteContract,
+} from 'wagmi';
 import { contractABI } from '../contracts/contractABI';
-import { useToast } from './use-toast'; // Giả sử bạn có hook toast
+import { useToast } from './use-toast';
+import { createAnswer } from '@/service/answer.service';
+import { network } from '@/configs/WalletConfig';
+import { useEffect } from 'react';
 
-export interface SubmitAnswerArgs {
+interface SubmitAnswerArgs {
   questionId: bigint;
   answerText: string;
 }
 
 export function useAnswer() {
   const { toast } = useToast();
+  const { address: account } = useAccount();
+
   const {
     data: hash,
     error,
@@ -18,9 +27,7 @@ export function useAnswer() {
   } = useWriteContract();
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
-    useWaitForTransactionReceipt({
-      hash,
-    });
+    useWaitForTransactionReceipt({ hash });
 
   const submitAnswer = async ({ questionId, answerText }: SubmitAnswerArgs) => {
     try {
@@ -32,36 +39,80 @@ export function useAnswer() {
         throw new Error('Answer text is too long');
       }
 
+      // **1. Xử lý dữ liệu trước khi gửi transaction**
+      const response = await createAnswer({ answerText });
+
+      if (!response.data?.code || !response.data?.result?.id) {
+        throw new Error('Failed to submit answer');
+      }
+
+      const answerDetailId = response.data.result.id;
+
+      // **2. Gửi transaction lên smart contract**
       writeContract({
         address: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`,
         abi: contractABI,
         functionName: 'submitAnswer',
-        args: [questionId, answerText],
+        args: [questionId, answerDetailId],
+        account: account,
+        chain: network,
       });
 
+      // **Hiển thị toast khi cần ký giao dịch**
       toast({
-        title: 'Answer Submitted',
-        description: 'Your answer is being processed',
+        title: 'Waiting for signature...',
+        description: 'Please confirm the transaction in your wallet.',
         variant: 'default',
+        className: 'toast-pending',
       });
     } catch (err) {
       console.error('Error submitting answer:', err);
 
-      // Hiển thị toast lỗi
       toast({
         title: 'Submission Failed',
         description:
-          err instanceof Error ? err.message : 'An unexpected error occurred',
+          err instanceof Error ? err.message : 'An unexpected error occurred.',
         variant: 'destructive',
+        className: 'toast-error',
       });
 
       throw err;
     }
   };
 
-  const resetState = () => {
-    // Logic reset state nếu cần
-  };
+  // **Effect xử lý trạng thái giao dịch**
+  useEffect(() => {
+    if (isPending) {
+      toast({
+        title: 'Waiting for signature...',
+        description: 'Please confirm the transaction in your wallet.',
+        variant: 'default',
+        className: 'toast-pending',
+      });
+    }
+  }, [isPending, toast]);
+
+  useEffect(() => {
+    if (isConfirming) {
+      toast({
+        title: 'Submitting Answer...',
+        description: 'Your transaction is being processed on-chain.',
+        variant: 'default',
+        className: 'toast-confirming',
+      });
+    }
+  }, [isConfirming, toast]);
+
+  useEffect(() => {
+    if (isConfirmed) {
+      toast({
+        title: 'Answer Submitted!',
+        description: 'Your answer has been recorded on-chain.',
+        variant: 'default',
+        className: 'toast-success',
+      });
+    }
+  }, [isConfirmed, toast]);
 
   return {
     submitAnswer,
@@ -71,6 +122,5 @@ export function useAnswer() {
     isError,
     hash,
     error,
-    resetState,
   };
 }
