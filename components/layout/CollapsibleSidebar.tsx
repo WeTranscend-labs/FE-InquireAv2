@@ -76,7 +76,6 @@ export function CollapsibleSidebar() {
       : balanceData.formatted
     : '0';
 
-  console.log(user);
   const reputation = user?.reputation || BigInt(0);
 
   return (

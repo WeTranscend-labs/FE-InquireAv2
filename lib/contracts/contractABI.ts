@@ -8,13 +8,13 @@ export const contractABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'uint256',
         name: 'questionId',
         type: 'uint256',
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: 'uint256',
         name: 'answerId',
         type: 'uint256',
@@ -28,7 +28,7 @@ export const contractABI = [
       {
         indexed: false,
         internalType: 'string',
-        name: 'answerText',
+        name: 'answerDetailId',
         type: 'string',
       },
     ],
@@ -39,17 +39,7 @@ export const contractABI = [
     inputs: [
       {
         internalType: 'string',
-        name: '_questionText',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_questionContent',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_category',
+        name: '_questionDetailId',
         type: 'string',
       },
       {
@@ -98,7 +88,7 @@ export const contractABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'uint256',
         name: 'questionId',
         type: 'uint256',
@@ -112,7 +102,7 @@ export const contractABI = [
       {
         indexed: false,
         internalType: 'string',
-        name: 'questionText',
+        name: 'questionDetailId',
         type: 'string',
       },
       {
@@ -120,12 +110,6 @@ export const contractABI = [
         internalType: 'uint256',
         name: 'rewardAmount',
         type: 'uint256',
-      },
-      {
-        indexed: false,
-        internalType: 'string',
-        name: 'category',
-        type: 'string',
       },
     ],
     name: 'QuestionAsked',
@@ -135,7 +119,7 @@ export const contractABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'uint256',
         name: 'questionId',
         type: 'uint256',
@@ -177,7 +161,7 @@ export const contractABI = [
       },
       {
         internalType: 'string',
-        name: '_answerText',
+        name: '_answerDetailId',
         type: 'string',
       },
     ],
@@ -190,13 +174,13 @@ export const contractABI = [
     anonymous: false,
     inputs: [
       {
-        indexed: false,
+        indexed: true,
         internalType: 'uint256',
         name: 'questionId',
         type: 'uint256',
       },
       {
-        indexed: false,
+        indexed: true,
         internalType: 'uint256',
         name: 'answerId',
         type: 'uint256',
@@ -276,7 +260,7 @@ export const contractABI = [
       },
       {
         internalType: 'string',
-        name: 'answerText',
+        name: 'answerDetailId',
         type: 'string',
       },
       {
@@ -359,7 +343,7 @@ export const contractABI = [
           },
           {
             internalType: 'string',
-            name: 'answerText',
+            name: 'answerDetailId',
             type: 'string',
           },
           {
@@ -420,7 +404,7 @@ export const contractABI = [
           },
           {
             internalType: 'string',
-            name: 'answerText',
+            name: 'answerDetailId',
             type: 'string',
           },
           {
@@ -481,17 +465,7 @@ export const contractABI = [
           },
           {
             internalType: 'string',
-            name: 'questionText',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'questionContent',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'category',
+            name: 'questionDetailId',
             type: 'string',
           },
           {
@@ -557,17 +531,7 @@ export const contractABI = [
           },
           {
             internalType: 'string',
-            name: 'questionText',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'questionContent',
-            type: 'string',
-          },
-          {
-            internalType: 'string',
-            name: 'category',
+            name: 'questionDetailId',
             type: 'string',
           },
           {
@@ -609,25 +573,6 @@ export const contractABI = [
         internalType: 'uint256',
         name: 'totalPages',
         type: 'uint256',
-      },
-    ],
-    stateMutability: 'view',
-    type: 'function',
-  },
-  {
-    inputs: [
-      {
-        internalType: 'string',
-        name: '_category',
-        type: 'string',
-      },
-    ],
-    name: 'getQuestionsByCategory',
-    outputs: [
-      {
-        internalType: 'uint256[]',
-        name: '',
-        type: 'uint256[]',
       },
     ],
     stateMutability: 'view',
@@ -778,17 +723,7 @@ export const contractABI = [
       },
       {
         internalType: 'string',
-        name: 'questionText',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'questionContent',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: 'category',
+        name: 'questionDetailId',
         type: 'string',
       },
       {
