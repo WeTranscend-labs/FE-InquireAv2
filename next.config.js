@@ -14,6 +14,9 @@ const nextConfig = {
     ignoreDuringBuilds: true,
     dirs: [],
   },
+  images: {
+    domains: ['images.unsplash.com', 'i.pravatar.cc'],
+  },
 };
 
 module.exports = nextConfig;

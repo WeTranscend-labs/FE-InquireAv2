@@ -7,6 +7,8 @@ import { motion } from 'framer-motion';
 import { ParallaxBackground } from './ParallaxBackground';
 import { ShimmerButton } from '../magicui/shimmer-button';
 import { SparklesText } from '../magicui/sparkles-text';
+import { TypewriterEffect } from '../ui/typewriter-effect';
+
 
 export function HeroSection() {
   return (
@@ -28,9 +30,13 @@ export function HeroSection() {
 
             {/* Tiêu đề & Mô tả */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight mb-6 text-foreground">
-              <SparklesText
-                text=" Where Knowledge Meets Rewards"
-                sparklesCount={10}
+              <TypewriterEffect
+                words={[
+                  { text: "Where" },
+                  { text: "Knowledge", className: "text-primary" },
+                  { text: "Meets" },
+                  { text: "Rewards", className: "text-primary" },
+                ]}
               />
             </h1>
             <p className="text-xl text-muted-foreground mb-8 leading-relaxed">

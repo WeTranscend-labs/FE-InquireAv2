@@ -100,7 +100,7 @@ body.modal-open {
 }
 
 code {
-  font-family: 'Fira Code', monospace;
+  font-family: "Fira Code", monospace;
   font-size: 1rem;
   color: #333;
 }
@@ -115,7 +115,7 @@ pre {
 }
 
 pre code {
-  font-family: 'Fira Code', monospace;
+  font-family: "Fira Code", monospace;
 }
 
 .dark code {
