@@ -13,7 +13,7 @@ export function LeaderboardHeader() {
   useEffect(() => {
     const interval = setInterval(() => {
       setKey(prevKey => prevKey + 1);
-    }, 5000); // Repeat every 5 seconds
+    }, 10000); // Repeat every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -32,7 +32,7 @@ export function LeaderboardHeader() {
               className="!min-h-0 !h-16 py-2 text-3xl font-extrabold"
               letterAnimationDuration={300}
               letterInterval={50}
-              initialDelay={100}
+              initialDelay={1000}
             />
           </div>
         </div>

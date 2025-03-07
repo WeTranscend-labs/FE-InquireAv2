@@ -3,7 +3,7 @@
 
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Trophy, Medal, Award, Zap, MessageCircle } from 'lucide-react';
+import { Trophy, Medal, Award, Zap, MessageCircle, ChevronRight, ChevronLeft } from 'lucide-react';
 import { ReputationBadge } from '@/components/features/ReputationBadge';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -22,6 +22,11 @@ import { Button } from '@/components/ui/button';
 export function LeaderboardTable() {
   const { users, error, isLoading, pagination, changePage } = useGetUsers(5);
 
+  // Sort users by reputation (highest first) if users array exists
+  const sortedUsers = users ? [...users].sort((a, b) =>
+    Number(b.reputation) - Number(a.reputation)
+  ) : [];
+
   if (isLoading) {
     return (
       <Card className="p-8 border-0 shadow-2xl bg-card/90 backdrop-blur-md rounded-2xl">
@@ -35,7 +40,7 @@ export function LeaderboardTable() {
     );
   }
 
-  if (error || !users || users.length === 0) {
+  if (error || !sortedUsers || sortedUsers.length === 0) {
     return (
       <Card className="p-8 border-0 shadow-2xl bg-card/90 backdrop-blur-md rounded-2xl">
         <div className="flex flex-col items-center justify-center h-64 space-y-4">
@@ -52,14 +57,24 @@ export function LeaderboardTable() {
 
   return (
     <Card className="border-0 shadow-2xl bg-gradient-to-br from-card to-muted/50 backdrop-blur-md rounded-2xl overflow-hidden">
-      <div className="p-8 pb-6 bg-gradient-to-r from-primary/5 to-accent/5 border-b border-border">
-        <h2 className="text-3xl font-extrabold text-foreground tracking-tight flex items-center gap-2">
-          <Trophy className="h-8 w-8 text-primary" />
-          Top Contributors
-        </h2>
-        <p className="text-muted-foreground mt-2 ml-10">
-          Recognizing our community's leading innovators and problem solvers
-        </p>
+      <div className="p-5 pb-4 bg-gradient-to-r from-primary/5 via-accent/5 to-transparent border-b border-border/50">
+        <div className="flex items-center">
+          <div className="relative mr-4">
+            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-primary/20 to-accent/20 blur-sm opacity-60"></div>
+            <Trophy className="h-7 w-7 text-primary relative drop-shadow-md" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-foreground tracking-tight leading-tight flex items-center">
+              Top Contributors
+              <span className="ml-2 text-xs font-normal px-2 py-0.5 bg-primary/10 text-primary rounded-full">
+                Leaderboard
+              </span>
+            </h2>
+            <p className="text-sm text-muted-foreground mt-0.5 opacity-90">
+              Recognizing our community's leading innovators and problem solvers
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="p-6">
@@ -76,7 +91,7 @@ export function LeaderboardTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user, index) => (
+            {sortedUsers.map((user, index) => (
               <TableRow
                 key={user.userAddress}
                 className={cn(
@@ -86,7 +101,7 @@ export function LeaderboardTable() {
                     : ''
                 )}
               >
-                <TableCell className="font-medium w-16">
+                <TableCell className="font-medium w-16 py-3">
                   <div className="flex justify-center">
                     {index < 3 ? (
                       <motion.div
@@ -100,29 +115,29 @@ export function LeaderboardTable() {
                         <RankIcon rank={index + 1} />
                       </motion.div>
                     ) : (
-                      <span className="text-muted-foreground font-semibold text-lg">
+                      <span className="text-muted-foreground font-semibold text-base">
                         {index + 1}
                       </span>
                     )}
                   </div>
                 </TableCell>
 
-                <TableCell>
-                  <div className="flex items-center gap-4">
+                <TableCell className="py-3">
+                  <div className="flex items-center gap-3">
                     <motion.div
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.2 }}
                     >
                       <Avatar
                         className={cn(
-                          'h-14 w-14 ring-2 ring-offset-2 transition-all duration-300 group-hover:ring-offset-4 shadow-md',
+                          'h-10 w-10 ring-2 ring-offset-1 transition-all duration-300 group-hover:ring-offset-2 shadow-md',
                           index === 0
                             ? 'ring-primary/70 group-hover:ring-primary'
                             : index === 1
-                            ? 'ring-secondary/70 group-hover:ring-secondary'
-                            : index === 2
-                            ? 'ring-accent/70 group-hover:ring-accent'
-                            : 'ring-muted-foreground/30 group-hover:ring-muted-foreground/50'
+                              ? 'ring-secondary/70 group-hover:ring-secondary'
+                              : index === 2
+                                ? 'ring-accent/70 group-hover:ring-accent'
+                                : 'ring-muted-foreground/30 group-hover:ring-muted-foreground/50'
                         )}
                       >
                         <AvatarImage
@@ -136,13 +151,13 @@ export function LeaderboardTable() {
                     </motion.div>
 
                     <div>
-                      <div className="font-semibold text-foreground flex items-center gap-2 text-lg">
+                      <div className="font-semibold text-foreground flex items-center gap-2 text-base">
                         {user.userAddress.slice(0, 6) +
                           '...' +
                           user.userAddress.slice(-4)}
                         <ReputationBadge points={Number(user.reputation)} />
                       </div>
-                      <div className="text-sm text-muted-foreground flex items-center gap-2 mt-2">
+                      <div className="text-xs text-muted-foreground flex items-center gap-2 mt-1">
                         <ActivityIcons
                           answers={Number(user.answerCount)}
                           solutions={Number(user.bestSolutionCount)}
@@ -152,15 +167,15 @@ export function LeaderboardTable() {
                   </div>
                 </TableCell>
 
-                <TableCell>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
+                <TableCell className="py-3">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs">
                       <span className="text-muted-foreground font-medium">
                         Contribution Level
                       </span>
                       <span
                         className={cn(
-                          'font-bold px-3 py-1 rounded-full text-xs',
+                          'font-bold px-2 py-0.5 rounded-full text-xs',
                           getLevelColor(Number(user.reputation))
                         )}
                       >
@@ -169,12 +184,9 @@ export function LeaderboardTable() {
                     </div>
                     <ProgressBar
                       value={getProgressValue(Number(user.reputation))}
-                      // className={cn(
-                      //   'h-2 rounded-full',
-                      //   getLevelProgressColor(Number(user.reputation))
-                      // )}
+
                     />
-                    <div className="flex text-xs text-muted-foreground gap-4 font-medium">
+                    <div className="flex text-xs text-muted-foreground gap-3 font-medium">
                       <span className="flex items-center gap-1">
                         <MessageCircle className="h-3 w-3" />
                         {Number(user.answerCount)} answers
@@ -199,20 +211,28 @@ export function LeaderboardTable() {
             onClick={() => changePage(pagination.currentPage - 1)}
             disabled={pagination.currentPage === 1}
             variant="outline"
-            className="px-5 py-2 bg-card hover:bg-muted text-foreground rounded-lg shadow-sm border border-border hover:border-input disabled:bg-muted disabled:text-muted-foreground transition-colors duration-200 font-medium"
+            size="sm"
+            className="h-9 px-3 border-border/70 bg-card hover:bg-muted transition-all duration-200"
           >
-            <span className="mr-2">←</span> Previous
+            <ChevronLeft className="h-4 w-4 mr-1" />
+            Previous
           </Button>
-          <span className="text-muted-foreground font-medium bg-muted px-4 py-2 rounded-lg">
-            Page {pagination.currentPage} of {Number(pagination.totalPages)}
-          </span>
+
+          <div className="flex items-center justify-center px-3 py-1.5 rounded-md bg-muted/50 border border-border/50">
+            <span className="text-sm font-medium">
+              Page {pagination.currentPage} of {Number(pagination.totalPages)}
+            </span>
+          </div>
+
           <Button
             onClick={() => changePage(pagination.currentPage + 1)}
             disabled={pagination.currentPage === Number(pagination.totalPages)}
             variant="outline"
-            className="px-5 py-2 bg-card hover:bg-muted text-foreground rounded-lg shadow-sm border border-border hover:border-input disabled:bg-muted disabled:text-muted-foreground transition-colors duration-200 font-medium"
+            size="sm"
+            className="h-9 px-3 border-border/70 bg-card hover:bg-muted transition-all duration-200"
           >
-            Next <span className="ml-2">→</span>
+            Next
+            <ChevronRight className="h-4 w-4 ml-1" />
           </Button>
         </div>
       </div>
@@ -223,11 +243,17 @@ export function LeaderboardTable() {
 function RankIcon({ rank }: { rank: number }) {
   switch (rank) {
     case 1:
-      return <Trophy className="h-8 w-8 text-primary filter drop-shadow-md" />;
+      return (
+        <Trophy className="h-6 w-6 text-yellow-500" />
+      );
     case 2:
-      return <Medal className="h-7 w-7 text-secondary filter drop-shadow-md" />;
+      return (
+        <Medal className="h-5 w-5 text-slate-300" />
+      );
     case 3:
-      return <Award className="h-7 w-7 text-accent filter drop-shadow-md" />;
+      return (
+        <Award className="h-5 w-5 text-amber-700" />
+      );
     default:
       return null;
   }
