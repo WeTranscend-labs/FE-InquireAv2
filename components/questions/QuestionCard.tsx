@@ -52,14 +52,14 @@ export function QuestionCard({ question }: QuestionCardProps) {
                   </span>
                 </TooltipTrigger>
                 <TooltipContent align="start">
-                  <Button variant="default" className="py-2 px-4">
+                  <Button
+                    variant="ghost"
+                    className="py-2 px-4 bg-background border border-neutral-300 dark:border-neutral-700 shadow-md"
+                  >
                     {question.title}
                   </Button>
                 </TooltipContent>
               </Tooltip>
-              {/* <p className="text-sm text-muted-foreground mt-2 line-clamp-2 group-hover:text-muted-foreground/80 transition-all duration-200">
-              {question.content}
-            </p> */}
 
               <QuestionContent
                 content={question.content}

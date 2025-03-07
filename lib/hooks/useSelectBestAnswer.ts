@@ -8,10 +8,11 @@ import {
 } from 'wagmi';
 import { contractABI } from '../contracts/contractABI';
 import { useToast } from './use-toast';
+import { network } from '@/configs/WalletConfig';
 
 export function useSelectBestAnswer() {
   const { toast } = useToast();
-  const { address } = useAccount();
+  const { address: account } = useAccount();
   const [isSelecting, setIsSelecting] = useState(false);
   const [transactionHash, setTransactionHash] = useState<
     `0x${string}` | undefined
@@ -40,6 +41,8 @@ export function useSelectBestAnswer() {
             abi: contractABI,
             functionName: 'selectBestAnswer',
             args: [questionId, answerId],
+            account: account,
+            chain: network,
           },
           {
             onSuccess: (hash) => {

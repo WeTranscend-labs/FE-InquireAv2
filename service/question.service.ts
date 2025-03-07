@@ -3,7 +3,7 @@ import { CreateQuestionData } from './dto/question/question.create';
 import { ApiResponse } from './dto/apiReponse';
 import { QuestionResponse } from './dto/question/question.response';
 
-export const BASE_URL = 'http://localhost:8080/api';
+export const BASE_URL = 'https://be-inquire-a.vercel.app/api';
 
 export async function createQuestion(
   data: CreateQuestionData

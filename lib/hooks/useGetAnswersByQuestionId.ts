@@ -5,6 +5,7 @@ import { useReadContract } from 'wagmi';
 import { contractABI } from '../contracts/contractABI';
 import { getAnswerById } from '@/service/answer.service';
 
+// Cập nhật interface ContractAnswer để thêm questionId và parentAnswerId
 export interface ContractAnswer {
   id: bigint;
   responder: string;
@@ -13,6 +14,8 @@ export interface ContractAnswer {
   upvotes: bigint;
   rewardAmount: bigint;
   createdAt: bigint;
+  questionId: bigint; // Thêm trường này
+  parentAnswerId: bigint; // Thêm trường này
 }
 
 export function useGetAnswersByQuestionId(
@@ -82,6 +85,7 @@ export function useGetAnswersByQuestionId(
     const processedAnswers: ContractAnswer[] = rawAnswers.map((answer) => ({
       ...answer,
       upvotes: BigInt(Number(answer.upvotes)), // Convert to BigInt
+      // questionId và parentAnswerId đã có trong rawAnswers từ contract
     }));
 
     return {
