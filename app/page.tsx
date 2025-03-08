@@ -39,7 +39,9 @@ export default function Home() {
       <WelcomeBanner />
 
       <ScrollReveal>
-        <HeroSection />
+        <div className="mb-[220px]">
+          <HeroSection />
+        </div>
       </ScrollReveal>
 
       <ScrollReveal delay={0.1}>
