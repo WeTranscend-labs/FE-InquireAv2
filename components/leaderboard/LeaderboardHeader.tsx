@@ -1,10 +1,10 @@
-"use client"
+'use client';
 
-import { Trophy, Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import MatrixText from '@/components/kokonutui/matrix-text'
-import { useEffect, useState } from 'react'
+import { Trophy, Search } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import MatrixText from '@/components/kokonutui/matrix-text';
+import { useEffect, useState } from 'react';
 
 export function LeaderboardHeader() {
   const [key, setKey] = useState(0);
@@ -12,7 +12,7 @@ export function LeaderboardHeader() {
   // Effect to periodically trigger animation
   useEffect(() => {
     const interval = setInterval(() => {
-      setKey(prevKey => prevKey + 1);
+      setKey((prevKey) => prevKey + 1);
     }, 10000); // Repeat every 5 seconds
 
     return () => clearInterval(interval);
@@ -29,7 +29,7 @@ export function LeaderboardHeader() {
             <MatrixText
               key={key}
               text="Leaderboard"
-              className="!min-h-0 !h-16 py-2 text-3xl font-extrabold"
+              className="!min-h-0 !h-16 py-2 text-3xl font-extrabold text-foreground grayscale"
               letterAnimationDuration={300}
               letterInterval={50}
               initialDelay={1000}
@@ -37,7 +37,8 @@ export function LeaderboardHeader() {
           </div>
         </div>
         <p className="text-muted-foreground max-w-md">
-          Recognizing our top contributors and their remarkable achievements in helping our community grow
+          Recognizing our top contributors and their remarkable achievements in
+          helping our community grow
         </p>
       </div>
 
@@ -49,10 +50,8 @@ export function LeaderboardHeader() {
             className="pl-9 w-full md:w-[220px]"
           />
         </div>
-        <Button variant="outline">
-          This Week
-        </Button>
+        <Button variant="outline">This Week</Button>
       </div>
     </div>
-  )
+  );
 }

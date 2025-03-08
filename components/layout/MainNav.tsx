@@ -131,7 +131,7 @@ export function MainNav() {
         {/* Công cụ và nút hành động */}
         <div className="flex items-center gap-4">
           <ModeToggle />
-          <Button asChild size="sm" variant="outline">
+          <Button asChild size="sm">
             <Link href="/questions/ask">
               <PlusCircle className="h-4 w-4 mr-2" />
               Ask Question

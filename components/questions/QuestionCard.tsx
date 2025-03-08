@@ -82,7 +82,9 @@ export function QuestionCard({ question }: QuestionCardProps) {
 
             <div className="flex items-center justify-between text-sm text-muted-foreground w-full">
               <div className="flex items-center gap-2 flex-1">
-                <CustomAvatar address={question.author} size={32} />
+                <div className="h-8 w-8">
+                  <CustomAvatar address={question.author} size={32} />
+                </div>
                 <Link
                   href={`/users/${question.author}`}
                   className="hover:text-foreground font-medium transition-colors duration-200"

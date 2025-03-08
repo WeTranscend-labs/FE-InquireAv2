@@ -9,8 +9,6 @@ import { FloatingPaths } from '../kokonutui/hero-bg';
 import { ShimmerButton } from '../magicui/shimmer-button';
 import { TypewriterEffect } from '../ui/typewriter-effect';
 
-
-
 const pacifico = Pacifico({
   subsets: ['latin'],
   weight: ['400'],
@@ -18,7 +16,6 @@ const pacifico = Pacifico({
 });
 
 // Remove the Three.js components and replace with CSS version
-
 
 function ElegantShape({
   className,
@@ -86,13 +83,13 @@ export function HeroSection() {
             animate="visible"
           >
             {/* Tiêu đề & Mô tả */}
-            <h1 className="font-extrabold  tracking-tight mb-6 text-foreground">
+            <h1 className="font-black tracking-tight mb-6 text-foreground">
               <TypewriterEffect
                 words={[
-                  { text: "Where" },
-                  { text: "Knowledge", className: "text-primary" },
-                  { text: "Meets" },
-                  { text: "Rewards", className: "text-primary" },
+                  { text: 'Where' },
+                  { text: 'Knowledge', className: 'text-primary' },
+                  { text: 'Meets' },
+                  { text: 'Rewards', className: 'text-primary' },
                 ]}
               />
             </h1>
@@ -104,7 +101,7 @@ export function HeroSection() {
             initial="hidden"
             animate="visible"
           >
-            <p className="text-[1.3rem] text-muted-foreground mb-8 leading-relaxed shimmer-text">
+            <p className="text-[1.3rem] text-foreground mb-8 leading-relaxed shimmer-text font-medium">
               Ask questions with token bounties, provide valuable answers, and
               earn rewards. Join InquireA's blockchain-powered Q&A community
               today.
@@ -137,9 +134,8 @@ export function HeroSection() {
       {/* Add shimmer effect styles */}
       <style jsx global>{`
         .shimmer-text {
-          /* Default fallback for compatibility */
-          --shimmer-color-start: #627c20; 
-          --shimmer-color-mid: #D8FF76;
+          --shimmer-color-start: #ccc; /* Xám sáng hơn */
+          --shimmer-color-mid: #fff; /* Trắng */
           background: linear-gradient(
             90deg,
             var(--shimmer-color-start) 0%,
@@ -155,24 +151,26 @@ export function HeroSection() {
           animation: shimmer 2.5s infinite linear;
         }
 
-        /* Theme-based styling */
-        :root[data="light"] .shimmer-text {
-          --shimmer-color-start: #D8FF76;
-          --shimmer-color-mid: #D8FF76;
+        /* Điều chỉnh theo theme */
+        :root[data='light'] .shimmer-text {
+          --shimmer-color-start: #ddd; /* Gần trắng */
+          --shimmer-color-mid: #fff; /* Trắng sáng */
         }
 
-        :root[data="dark"] .shimmer-text {
-          --shimmer-color-start: #D8FF76;
-          --shimmer-color-mid: #D8FF76;
+        :root[data='dark'] .shimmer-text {
+          --shimmer-color-start: #eee; /* Trắng nhạt */
+          --shimmer-color-mid: #fff; /* Trắng sáng nhất */
         }
 
         @keyframes shimmer {
-          0% { background-position: 100% 0; }
-          100% { background-position: -100% 0; }
+          0% {
+            background-position: 100% 0;
+          }
+          100% {
+            background-position: -100% 0;
+          }
         }
       `}</style>
-
-
     </div>
   );
 }

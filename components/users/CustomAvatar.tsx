@@ -1,4 +1,4 @@
-import { thumbs } from '@dicebear/collection';
+import { identicon } from '@dicebear/collection';
 import { createAvatar } from '@dicebear/core';
 import { AvatarComponent } from '@rainbow-me/rainbowkit';
 import Image from 'next/image';
@@ -6,7 +6,7 @@ import Image from 'next/image';
 const CustomAvatar: AvatarComponent = ({ address, ensImage, size = 10 }) => {
   if (!address) return null;
 
-  const avatar = createAvatar(thumbs, {
+  const avatar = createAvatar(identicon, {
     seed: address,
     size: size,
     backgroundType: ['gradientLinear', 'solid'],
