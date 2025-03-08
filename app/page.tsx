@@ -48,19 +48,7 @@ export default function Home() {
         <HowItWorks />
       </ScrollReveal>
 
-      <ScrollReveal delay={0.1}>
-        <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-3">Discover Our Community</h2>
-            <p className="text-muted-foreground">Explore questions and solutions shared by developers worldwide</p>
-          </div>
-          <GridMotion
-            items={questionImages}
-            className="h-[500px]"
-            containerClassName="grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
-          />
-        </div>
-      </ScrollReveal>
+
 
       <ScrollReveal delay={0.1}>
         <StatsSection />
