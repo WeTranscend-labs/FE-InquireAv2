@@ -11,12 +11,17 @@ import {
   Wallet,
   Copy,
   Check,
-  Sparkles
+  Sparkles,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -151,7 +156,9 @@ export function CustomConnectButton() {
                             {!chain.iconUrl && (
                               <NetworkIcon className="h-4 w-4 mr-1.5 text-primary" />
                             )}
-                            <span className="font-medium text-sm">{chain.name}</span>
+                            <span className="font-medium text-sm">
+                              {chain.name}
+                            </span>
                           </div>
                         </Button>
                       </TooltipTrigger>
@@ -175,7 +182,10 @@ export function CustomConnectButton() {
                       </Avatar>
                       <div className="flex flex-col items-start">
                         <div className="flex items-center gap-1">
-                          <Badge variant="outline" className="px-1.5 py-0 text-xs font-normal bg-muted/50 shadow-inner">
+                          <Badge
+                            variant="outline"
+                            className="px-1.5 py-0 text-xs font-normal bg-muted/50 shadow-inner"
+                          >
                             {formatAddress(account.address)}
                           </Badge>
                           <AnimatePresence mode="wait">
@@ -191,10 +201,11 @@ export function CustomConnectButton() {
                               }}
                               className="text-muted-foreground hover:text-primary transition-colors"
                             >
-                              {copied ?
-                                <Check className="h-3.5 w-3.5 text-green-500" /> :
+                              {copied ? (
+                                <Check className="h-3.5 w-3.5 text-green-500" />
+                              ) : (
                                 <Copy className="h-3.5 w-3.5" />
-                              }
+                              )}
                             </motion.button>
                           </AnimatePresence>
                         </div>

@@ -1,18 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import {
-  CircleDollarSign,
-  MessageSquare,
-  Info,
-  PlusCircle,
-} from 'lucide-react';
 import { ModeToggle } from '@/components/mode-toggle';
-import { usePathname } from 'next/navigation';
-import { CustomConnectButton } from '../wallet/CustomConnectWallet';
+import { Button } from '@/components/ui/button';
+import { Info, MessageSquare, PlusCircle } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { CustomConnectButton } from '../wallet/CustomConnectWallet';
 
 export function MainNav() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,10 +33,8 @@ export function MainNav() {
       }`}
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo và Navigation */}
         <div className="flex items-center gap-6">
           <Link href="/" className="flex items-center gap-2">
-            {/* <CircleDollarSign className="h-6 w-6 text-primary dark:text-gray-100" /> */}
             <svg
               version="1.1"
               id="Calque_1"
@@ -138,7 +131,7 @@ export function MainNav() {
         {/* Công cụ và nút hành động */}
         <div className="flex items-center gap-4">
           <ModeToggle />
-          <Button asChild>
+          <Button asChild size="sm" variant="outline">
             <Link href="/questions/ask">
               <PlusCircle className="h-4 w-4 mr-2" />
               Ask Question

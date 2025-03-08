@@ -1,12 +1,9 @@
-import React from 'react';
-import Image from 'next/image';
-import { useAccount } from 'wagmi';
-import { createAvatar } from '@dicebear/core';
 import { thumbs } from '@dicebear/collection';
-import { Address } from 'viem';
+import { createAvatar } from '@dicebear/core';
 import { AvatarComponent } from '@rainbow-me/rainbowkit';
+import Image from 'next/image';
 
-const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
+const CustomAvatar: AvatarComponent = ({ address, ensImage, size = 10 }) => {
   if (!address) return null;
 
   const avatar = createAvatar(thumbs, {
@@ -24,7 +21,7 @@ const CustomAvatar: AvatarComponent = ({ address, ensImage, size }) => {
       width={size}
       height={size}
       // objectFit="cover"
-      className="rounded-full"
+      className="rounded-full w-full h-full"
       unoptimized
     />
     // </div>
