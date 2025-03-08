@@ -15,7 +15,7 @@ interface AnswerEditorProps {
 export function AnswerEditor({
   questionId,
   onSubmit,
-  minimumLength = 100,
+  minimumLength = 50,
 }: AnswerEditorProps) {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);

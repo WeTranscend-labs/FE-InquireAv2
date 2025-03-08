@@ -8,10 +8,12 @@ import { QuestionMetadata } from './QuestionMetadata';
 import { QuestionTags } from './QuestionTags';
 
 import { Separator } from '@/components/ui/separator';
-import { ContractQuestion } from '@/lib/hooks/useGetQuestions';
+import { ContractQuestion, MergedQuestion } from '@/lib/hooks/useGetQuestions';
+import { Question } from '@/lib/types/SmartContractType';
+import { Address } from 'viem';
 
 interface QuestionDetailProps {
-  question: ContractQuestion;
+  question: MergedQuestion;
   answersCount: number;
 }
 
@@ -31,7 +33,7 @@ export default function QuestionDetail({
               </h1>
               <QuestionMetadata
                 author={{
-                  address: question.asker,
+                  address: question.asker as Address,
                   reputation: 750,
                   avatar: 'https://i.pravatar.cc/150?u=asker',
                 }}
