@@ -31,8 +31,8 @@ interface Answer {
   upvotes: bigint;
   rewardAmount: bigint;
   createdAt: bigint;
-  questionId: bigint;
-  parentAnswerId: bigint;
+  questionId: bigint; // new
+  parentAnswerId: bigint; //new
 }
 
 interface PaginationParams {
