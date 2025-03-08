@@ -29,14 +29,14 @@ export function HowItWorks() {
           <HeroVideoDialog
             className="block dark:hidden"
             animationStyle="top-in-bottom-out"
-            videoSrc="https://www.youtube.com/embed/KHqTWHC2qsA?si=UIYRXTRtOLo1hutb"
+            videoSrc="https://www.youtube.com/embed/jVqmKt-LfpA?si=poDnBRDnrRt9owu_"
             thumbnailSrc="https://i.ibb.co/tPwzYWBx/image.png"
             thumbnailAlt="Hero Video"
           />
           <HeroVideoDialog
             className="hidden dark:block"
             animationStyle="top-in-bottom-out"
-            videoSrc="https://www.youtube.com/embed/KHqTWHC2qsA?si=UIYRXTRtOLo1hutb"
+            videoSrc="https://www.youtube.com/embed/jVqmKt-LfpA?si=poDnBRDnrRt9owu_"
             thumbnailSrc="https://i.ibb.co/tPwzYWBx/image.png"
             thumbnailAlt="Hero Video"
           />
