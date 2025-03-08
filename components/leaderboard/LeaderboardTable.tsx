@@ -3,7 +3,15 @@
 
 import { Card } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Trophy, Medal, Award, Zap, MessageCircle, ChevronRight, ChevronLeft } from 'lucide-react';
+import {
+  Trophy,
+  Medal,
+  Award,
+  Zap,
+  MessageCircle,
+  ChevronRight,
+  ChevronLeft,
+} from 'lucide-react';
 import { ReputationBadge } from '@/components/features/ReputationBadge';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
@@ -18,14 +26,15 @@ import {
 import { ProgressBar } from '../ui/progress';
 import { useGetUsers } from '@/lib/hooks/useGetUsers';
 import { Button } from '@/components/ui/button';
+import CustomAvatar from '../users/CustomAvatar';
 
 export function LeaderboardTable() {
   const { users, error, isLoading, pagination, changePage } = useGetUsers(5);
 
   // Sort users by reputation (highest first) if users array exists
-  const sortedUsers = users ? [...users].sort((a, b) =>
-    Number(b.reputation) - Number(a.reputation)
-  ) : [];
+  const sortedUsers = users
+    ? [...users].sort((a, b) => Number(b.reputation) - Number(a.reputation))
+    : [];
 
   if (isLoading) {
     return (
@@ -134,16 +143,17 @@ export function LeaderboardTable() {
                           index === 0
                             ? 'ring-primary/70 group-hover:ring-primary'
                             : index === 1
-                              ? 'ring-secondary/70 group-hover:ring-secondary'
-                              : index === 2
-                                ? 'ring-accent/70 group-hover:ring-accent'
-                                : 'ring-muted-foreground/30 group-hover:ring-muted-foreground/50'
+                            ? 'ring-secondary/70 group-hover:ring-secondary'
+                            : index === 2
+                            ? 'ring-accent/70 group-hover:ring-accent'
+                            : 'ring-muted-foreground/30 group-hover:ring-muted-foreground/50'
                         )}
                       >
-                        <AvatarImage
+                        {/* <AvatarImage
                           src={`https://api.dicebear.com/7.x/identicon/svg?seed=${user.userAddress}`}
                           alt="User avatar"
-                        />
+                        /> */}
+                        <CustomAvatar address={user.userAddress} size={10} />
                         <AvatarFallback className="bg-gradient-to-br from-muted to-muted/70 text-muted-foreground font-bold">
                           {user.userAddress.slice(2, 4).toUpperCase()}
                         </AvatarFallback>
@@ -184,7 +194,6 @@ export function LeaderboardTable() {
                     </div>
                     <ProgressBar
                       value={getProgressValue(Number(user.reputation))}
-
                     />
                     <div className="flex text-xs text-muted-foreground gap-3 font-medium">
                       <span className="flex items-center gap-1">
@@ -243,17 +252,11 @@ export function LeaderboardTable() {
 function RankIcon({ rank }: { rank: number }) {
   switch (rank) {
     case 1:
-      return (
-        <Trophy className="h-6 w-6 text-yellow-500" />
-      );
+      return <Trophy className="h-6 w-6 text-yellow-500" />;
     case 2:
-      return (
-        <Medal className="h-5 w-5 text-slate-300" />
-      );
+      return <Medal className="h-5 w-5 text-slate-300" />;
     case 3:
-      return (
-        <Award className="h-5 w-5 text-amber-700" />
-      );
+      return <Award className="h-5 w-5 text-amber-700" />;
     default:
       return null;
   }
