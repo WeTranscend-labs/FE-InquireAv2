@@ -105,22 +105,22 @@ function CountAnimation({ targetValue }: { targetValue: string }) {
 const stats = [
   {
     title: "Total Reputation",
-    value: "1.2M",
+    value: "3K2",
     icon: Award
   },
   {
     title: "Questions Solved",
-    value: "45.3K",
+    value: "88",
     icon: Target
   },
   {
     title: "Active Users",
-    value: "12.5K",
+    value: "160",
     icon: Users
   },
   {
     title: "Expert Users",
-    value: "2.8K",
+    value: "78",
     icon: Star
   }
 ]

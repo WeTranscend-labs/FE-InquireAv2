@@ -70,6 +70,19 @@ export function QuestionForm() {
     }
   }, [isConfirmed, reset, router, toast]);
 
+  // Display error toast whenever submitError or contractError changes
+  useEffect(() => {
+    if (submitError || contractError) {
+      toast({
+        title: 'Error Submitting Question',
+        description: submitError || contractError?.message || 'An error occurred',
+        variant: 'destructive',
+        duration: 5000,
+        className: 'top-right-toast',
+      });
+    }
+  }, [submitError, contractError, toast]);
+
   const onSubmit = async (data: UpdatedQuestionFormValues) => {
     if (!isConnected) {
       toast({
@@ -159,15 +172,6 @@ export function QuestionForm() {
   return (
     <div className="grid md:grid-cols-[1fr] gap-8">
       <div className="space-y-6">
-        {(submitError || contractError) && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <span className="ml-2">
-              {submitError || contractError?.message || 'An error occurred'}
-            </span>
-          </Alert>
-        )}
-
         <MinimumFeeInfo minimumFee={1} userReputation={1} />
 
         <Card className="p-6">

@@ -31,7 +31,7 @@ export function HeroSection() {
   };
 
   return (
-    <div className="relative w-full flex items-center justify-center overflow-hidden pt-[80px] h-[calc(100vh-64px)]">
+    <div className="relative w-full flex items-center justify-center overflow-hidden pt-[10px] h-[calc(100vh-64px)]">
       {/* Background FloatingPaths full width */}
       <div className="absolute inset-0 w-screen h-full z-0 overflow-hidden">
         <motion.div
@@ -56,7 +56,7 @@ export function HeroSection() {
       {/* Nội dung chính trong container giới hạn */}
       <div className="relative z-10 container mx-auto px-4 md:px-6">
         <div className="max-w-3xl mx-auto text-center">
-          {/* <motion.div
+          <motion.div
             custom={0}
             variants={fadeUpVariants}
             initial="hidden"
@@ -68,7 +68,7 @@ export function HeroSection() {
                 Earn tokens by helping others
               </span>
             </div>
-          </motion.div> */}
+          </motion.div>
 
           <motion.div
             custom={1}

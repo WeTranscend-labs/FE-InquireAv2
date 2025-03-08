@@ -13,7 +13,7 @@ export default function AboutPage() {
       <OurMission />
       <CommunityValues />
       <TeamSection />
-      <FeaturedProjects />
+    
       <ContactSection />
     </div>
   )
