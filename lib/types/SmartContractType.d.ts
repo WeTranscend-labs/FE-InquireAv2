@@ -1,4 +1,4 @@
-import { Address } from 'viem';
+import { Address } from "viem";
 
 enum DeadlinePeriod {
   OneWeek,
@@ -33,6 +33,15 @@ interface Answer {
   createdAt: bigint;
   questionId: bigint; // new
   parentAnswerId: bigint; //new
+}
+
+interface Comment {
+  id: bigint;
+  content: string;
+  author: Address;
+  createdAt: bigint;
+  parentId: bigint | null;
+  replies: Comment[];
 }
 
 interface PaginationParams {
