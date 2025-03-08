@@ -1,6 +1,6 @@
 import { getDefaultConfig, getDefaultWallets } from '@rainbow-me/rainbowkit';
 import { ledgerWallet, trustWallet } from '@rainbow-me/rainbowkit/wallets';
-import { kairos as network } from 'wagmi/chains';
+import { ancient8Sepolia as network } from 'wagmi/chains';
 import { http } from 'wagmi';
 
 const { wallets } = getDefaultWallets();
@@ -17,7 +17,7 @@ const walletConfig = getDefaultConfig({
   ],
   chains: [network],
   transports: {
-    [network.id]: http(`${process.env.NEXT_PUBLIC_NETWORK_URL}`),
+    [network.id]: http(),
   },
   ssr: true,
 });

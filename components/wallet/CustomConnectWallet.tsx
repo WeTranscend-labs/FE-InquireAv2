@@ -1,30 +1,28 @@
 'use client';
 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import {
-  ChevronDown,
-  ExternalLink,
-  NetworkIcon,
-  OctagonAlert,
-  PlugZap,
-  Wallet,
-  Copy,
-  Check,
-  Sparkles,
-} from 'lucide-react';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { motion, AnimatePresence } from 'framer-motion';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  Check,
+  ChevronDown,
+  Copy,
+  NetworkIcon,
+  OctagonAlert,
+  PlugZap,
+  Sparkles,
+  Wallet,
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 export function CustomConnectButton() {
   const { theme, resolvedTheme } = useTheme();
