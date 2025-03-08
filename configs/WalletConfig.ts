@@ -17,7 +17,7 @@ const walletConfig = getDefaultConfig({
   ],
   chains: [network],
   transports: {
-    [network.id]: http(`${process.env.NEXT_PUBLIC_NETWORK_URL}`),
+    [network.id]: http(),
   },
   ssr: true,
 });
