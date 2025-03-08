@@ -14,6 +14,7 @@ import { Button } from '../ui/button';
 import CustomAvatar from '../users/CustomAvatar';
 import { QuestionContent } from './QuestionContent';
 import { QuestionStats } from './QuestionStats';
+import { useState, useEffect } from 'react';
 
 interface QuestionCardProps {
   question: {
@@ -30,13 +31,37 @@ interface QuestionCardProps {
 }
 
 export function QuestionCard({ question }: QuestionCardProps) {
+  const [answerCount, setAnswerCount] = useState<number>(question.answers || 0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Fetch answer count when component mounts
+  useEffect(() => {
+    const fetchAnswerCount = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/questions/${question.id}/answerCount`);
+        if (response.ok) {
+          const data = await response.json();
+          setAnswerCount(data.count || 0);
+        }
+      } catch (error) {
+        console.error(`Failed to fetch answer count for question ${question.id}:`, error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAnswerCount();
+  }, [question.id]);
+
   return (
     <Card className="group p-6 transition-all duration-300 bg-background hover:bg-accent/50 shadow-sm hover:shadow-md rounded-lg border border-border">
       <div className="flex gap-6">
         <QuestionStats
           votes={question.votes}
-          answers={question.answers}
+          answers={answerCount}
           bounty={question.bounty}
+          questionId={question.id}
         />
 
         <Link

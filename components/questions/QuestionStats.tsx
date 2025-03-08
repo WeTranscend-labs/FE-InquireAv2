@@ -8,22 +8,49 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { useState, useEffect } from 'react';
 
 interface QuestionStatsProps {
   votes: number;
   answers: number;
   bounty: number;
+  questionId?: string; // Add questionId to fetch answers count
 }
 
-export function QuestionStats({ votes, answers, bounty }: QuestionStatsProps) {
+export function QuestionStats({ votes, answers: initialAnswers, bounty, questionId }: QuestionStatsProps) {
+  const [answerCount, setAnswerCount] = useState<number>(initialAnswers);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Fetch answer count when component mounts or when questionId changes
+  useEffect(() => {
+    if (!questionId) return;
+
+    const fetchAnswerCount = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/questions/${questionId}/answerCount`);
+        if (response.ok) {
+          const data = await response.json();
+          setAnswerCount(data.count || 0);
+        }
+      } catch (error) {
+        console.error(`Failed to fetch answer count for question ${questionId}:`, error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAnswerCount();
+  }, [questionId]);
+
   return (
     <div className="flex flex-col items-center gap-4 text-muted-foreground">
       <StatItem icon={ChevronsUp} value={votes + ''} label="votes" />
       <StatItem
         icon={MessageSquare}
-        value={answers + ''}
+        value={isLoading ? '...' : answerCount + ''}
         label="answers"
-        className={cn(answers > 0 && 'text-primary')}
+        className={cn(answerCount > 0 && 'text-primary')}
       />
       <StatItem
         icon={CircleDollarSign}
