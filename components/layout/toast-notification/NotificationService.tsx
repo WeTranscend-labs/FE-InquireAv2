@@ -78,9 +78,9 @@ export function NotificationService() {
   const [currentNotification, setCurrentNotification] = useState<number | null>(null);
 
   useEffect(() => {
-    // Show a random notification after a random delay between 15-30 seconds (currently shortened for development)
+    // Show a random notification after a random delay of at least 30 seconds
     const showRandomNotification = () => {
-      const randomDelay = Math.floor(Math.random() * (30000 - 15000) + 15000); // Set to 15-30 seconds for production
+      const randomDelay = Math.floor(Math.random() * 15000 + 30000); // 30-45 seconds
       // const randomDelay = Math.floor(Math.random() * (3000 - 1500) + 1500); // Development testing only
 
       setTimeout(() => {
