@@ -88,14 +88,14 @@ Together, these tools create an intuitive, blockchain-backed frontend ready for 
 ## Project Structure
 ```
 .
-├── app         # Contains the main application logic, routing, and page components for the Q&A platform
-├── components   # Reusable UI components like question forms, answer displays, and interactive modals
-├── configs      # Configuration files for system settings, environment setups, or blockchain connections
-├── constants    # Static values such as fee structures, reward rules, or predefined settings
-├── contexts     # React contexts for managing global state, like user authentication or reputation
-├── lib          # Utility libraries and helper functions for core functionality
-├── public       # Static assets like images, fonts, or other publicly accessible files
-├── service      # Service modules for handling API calls, blockchain interactions, or business logic
+├── app/         # Contains the main application logic, routing, and page components for the Q&A platform
+├── components/   # Reusable UI components like question forms, answer displays, and interactive modals
+├── configs/      # Configuration files for system settings, environment setups, or blockchain connections
+├── constants/    # Static values such as fee structures, reward rules, or predefined settings
+├── contexts/     # React contexts for managing global state, like user authentication or reputation
+├── lib/          # Utility libraries and helper functions for core functionality
+├── public/       # Static assets like images, fonts, or other publicly accessible files
+├── service/      # Service modules for handling API calls, blockchain interactions, or business logic
 └── .env         # Environment configuration file storing sensitive keys and variables
 ```
 
