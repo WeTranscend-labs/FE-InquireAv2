@@ -32,7 +32,7 @@ type Props = {
 const ContentEditor = ({
   initialValue,
   onChange,
-  placeholder = 'Start typing your content here...',
+  placeholder = '',
   minHeight = 600,
   label = 'Content Editor',
   description = 'Rich text editor with visual and HTML views. Use Ctrl+Alt+P to preview.',

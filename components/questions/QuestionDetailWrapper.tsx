@@ -8,7 +8,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/lib/hooks/use-toast';
 import { useAnswer } from '@/lib/hooks/useAnswer';
 import { useGetAnswersByQuestionId } from '@/lib/hooks/useGetAnswersByQuestionId';
-import { ContractQuestion } from '@/lib/hooks/useGetQuestions';
+import { ContractQuestion, MergedQuestion } from '@/lib/hooks/useGetQuestions';
 import { useState } from 'react';
 import { formatEther } from 'viem';
 import { AnswerEditor } from './AnswerEditor';
@@ -25,7 +25,7 @@ const AutoSelectTimer = dynamic(
 );
 
 interface QuestionDetailWrapperProps {
-  question: ContractQuestion;
+  question: MergedQuestion;
 }
 
 export default function QuestionDetailWrapper({
@@ -51,6 +51,7 @@ export default function QuestionDetailWrapper({
       await submitAnswer({
         questionId: BigInt(question.id),
         answerText: content,
+        parentAnswerId: BigInt(0),
       });
 
       toast({
@@ -93,8 +94,8 @@ export default function QuestionDetailWrapper({
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-8">
-      <div className="grid grid-cols-[1fr,300px] gap-6">
+    <div className="max-w-6xl mx-auto my-2 space-y-8">
+      <div className="grid grid-cols-[1fr, 300px] gap-6">
         <QuestionDetail question={question} answersCount={totalAnswers} />
 
         <div className="space-y-4">

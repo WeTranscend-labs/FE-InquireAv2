@@ -41,7 +41,7 @@ export function useAnswer() {
         throw new Error('Answer text cannot be empty');
       }
 
-      if (answerText.length > 1000) {
+      if (answerText.length > 100000) {
         throw new Error('Answer text is too long');
       }
 

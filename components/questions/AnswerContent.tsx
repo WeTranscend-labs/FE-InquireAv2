@@ -26,7 +26,7 @@ export function AnswerContent({ content, className = '' }: AnswerContentProps) {
 
   return (
     <div
-      className={`max-w-none ${contentClass} break-all whitespace-pre-wrap ${className}`}
+      className={`max-w-none ${contentClass} break-all whitespace-pre-wrap text-[14px] ${className}`}
       dangerouslySetInnerHTML={{ __html: htmlContent }}
     />
   );
