@@ -1,7 +1,7 @@
 
 # InquireA - Frontend
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) [![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen.svg)](https://github.com/WeTranscend-labs/FE-Realm-of-Cards/actions) ![Ancient8](https://img.shields.io/badge/Blockchain-Ancient8-green.svg)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT) ![Ancient8](https://img.shields.io/badge/Blockchain-Ancient8-green.svg)
 
 Welcome to the vibrant world of **InquireA - Frontend**! This is your portal to a groundbreaking blockchain-powered Q&A platform. Whether you're a curious knowledge seeker or a problem-solving pro, this frontend brings **InquireA** to life with elegance, speed, and a dash of blockchain brilliance. Here’s everything you need to know about this project! 🧠💰
 
