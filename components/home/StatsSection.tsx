@@ -66,7 +66,7 @@ function StatCard({ stat, inView, delay }: StatCardProps) {
   }, [inView, target])
 
   return (
-    <Card 
+    <Card
       className="p-6 transition-all duration-500 hover:shadow-lg"
       style={{
         opacity: inView ? 1 : 0,
@@ -100,35 +100,35 @@ function StatCard({ stat, inView, delay }: StatCardProps) {
 const stats = [
   {
     name: 'Active Users',
-    value: '1,234',
+    value: '160',
     icon: Users,
     description: 'Developers actively participating',
     change: '12'
   },
   {
     name: 'Questions Solved',
-    value: '9,012',
+    value: '88',
     icon: CheckCircle2,
     description: 'Successfully resolved questions',
     change: '8'
   },
   {
     name: 'Total Rewards',
-    value: '5,678',
+    value: '215',
     icon: CircleDollarSign,
     description: 'Tokens distributed as rewards',
     change: '15'
   },
   {
     name: 'Expert Users',
-    value: '156',
+    value: '78',
     icon: Award,
     description: 'High reputation members',
     change: '5'
   },
   {
     name: 'Daily Questions',
-    value: '234',
+    value: '23',
     icon: MessageSquare,
     description: 'New questions per day',
     change: '10'
