@@ -42,6 +42,7 @@ export function AnswerCard({
 }: AnswerCardProps) {
   const [isReplying, setIsReplying] = useState(false); // Trạng thái hiển thị form reply
   const [replyText, setReplyText] = useState(''); // Nội dung reply
+  const [validationError, setValidationError] = useState(''); // Trạng thái lỗi validation
 
   // Sử dụng hook useAnswer để gửi reply
   const {
@@ -64,6 +65,10 @@ export function AnswerCard({
   // Xử lý gửi reply
   const handleSubmitReply = async () => {
     if (!replyText.trim()) return;
+    if (replyText.trim().length < 10) {
+      setValidationError("Reply must be at least 10 characters long");
+      return;
+    }
 
     try {
       await submitAnswer({
@@ -73,6 +78,7 @@ export function AnswerCard({
       });
       setReplyText('');
       setIsReplying(false);
+      setValidationError("");
       refetchReplies(); // Làm mới danh sách replies sau khi gửi thành công
     } catch (err) {
       console.error('Failed to submit reply:', err);
@@ -283,6 +289,9 @@ export function AnswerCard({
                     : 'Post Reply'}
                 </Button>
               </div>
+              {validationError && (
+                <p className="text-red-500 text-sm mt-2">{validationError}</p>
+              )}
               {replyError && (
                 <p className="text-red-500 text-sm mt-2">
                   {replyError.message}
