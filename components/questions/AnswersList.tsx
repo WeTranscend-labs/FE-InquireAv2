@@ -19,6 +19,35 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@radix-ui/react-tooltip';
+import { CommentThread } from './CommentThread';
+
+const mockComments = [
+  {
+    id: BigInt(1),
+    content: "This is a top level comment",
+    author: "0x123...",
+    createdAt: BigInt(Math.floor(Date.now() / 1000)),
+    parentId: null,
+    replies: [
+      {
+        id: BigInt(2),
+        content: "This is a nested reply",
+        author: "0x456...",
+        createdAt: BigInt(Math.floor(Date.now() / 1000)),
+        parentId: BigInt(1),
+        replies: []
+      }
+    ]
+  },
+  {
+    id: BigInt(3),
+    content: "Another top level comment",
+    author: "0x789...",
+    createdAt: BigInt(Math.floor(Date.now() / 1000)),
+    parentId: null,
+    replies: []
+  }
+];
 
 interface AnswersListProps {
   answers: ContractAnswer[];
@@ -179,6 +208,11 @@ export default function AnswersList({
             }
             onSelectBestAnswer={() => handleSelectBestAnswer(answer.id)}
             isSelecting={isSelecting}
+            comments={mockComments} // Add this line
+            onAddComment={(content, parentId) => {
+              console.log('New comment:', content, 'Parent ID:', parentId);
+              // TODO: Implement actual comment adding logic
+            }}
           />
         ))}
       </div>
@@ -209,6 +243,8 @@ interface AnswerCardProps {
   onSelectBestAnswer?: () => void;
   isSelecting?: boolean;
   isBestAnswer?: boolean;
+  comments?: Comment[];
+  onAddComment?: (content: string, parentId: bigint | null) => void;
 }
 
 export function AnswerCard({
@@ -219,7 +255,20 @@ export function AnswerCard({
   onSelectBestAnswer,
   isSelecting = false,
   isBestAnswer = false,
+  comments = [],
+  onAddComment,
 }: AnswerCardProps) {
+  const [isCommenting, setIsCommenting] = useState(false);
+  const [commentText, setCommentText] = useState('');
+
+  const handleAddComment = (parentId: bigint | null = null) => {
+    if (commentText.trim() && onAddComment) {
+      onAddComment(commentText, parentId);
+      setCommentText('');
+      setIsCommenting(false);
+    }
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -384,6 +433,61 @@ export function AnswerCard({
                 </motion.div>
               )}
             </div>
+          </div>
+        </div>
+
+        <div className="mt-6 pt-4 border-t">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-sm font-medium">Comments ({comments.length})</h4>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsCommenting(!isCommenting)}
+            >
+              <MessageSquare className="h-4 w-4 mr-2" />
+              Add Comment
+            </Button>
+          </div>
+
+          {isCommenting && (
+            <div className="mb-4">
+              <textarea
+                className="w-full p-2 border rounded-md"
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+                placeholder="Write your comment..."
+                rows={3}
+              />
+              <div className="flex justify-end gap-2 mt-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsCommenting(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() => handleAddComment(null)}
+                >
+                  Post
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* Display comments */}
+          <div className="space-y-4">
+            {comments.map((comment) => (
+              <CommentThread
+                key={comment.id.toString()}
+                comment={comment}
+                onReply={(parentId) => {
+                  setIsCommenting(true);
+                  // Handle reply logic
+                }}
+              />
+            ))}
           </div>
         </div>
 
