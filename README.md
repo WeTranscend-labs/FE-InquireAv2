@@ -5,6 +5,7 @@
 
 Welcome to the vibrant world of **InquireA - Frontend**! This is your portal to a groundbreaking blockchain-powered Q&A platform. Whether you're a curious knowledge seeker or a problem-solving pro, this frontend brings **InquireA** to life with elegance, speed, and a dash of blockchain brilliance. Here’s everything you need to know about this project! 🧠💰
 
+
 ## Table of Contents
 -   [What is InquireA - Frontend?](#what-is-inquirea---frontend)
 -   [How to Get Started](#how-to-get-started)
