@@ -77,6 +77,7 @@ export function QuestionFormFields() {
             <FormLabel>Tags</FormLabel>
             <div className="space-y-2">
               <div className="flex gap-2">
+
                 <Input
                   value={newTag}
                   onChange={(e) => setNewTag(e.target.value)}
@@ -124,8 +125,9 @@ export function QuestionFormFields() {
               <Input
                 type="number"
                 min={0.01}
+                step={0.01}
                 value={value}
-                onChange={(e) => onChange(parseInt(e.target.value))}
+                onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
                 {...field}
               />
             </FormControl>
